@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <meta
+    name="description"
+    content="HeritageLens is a browser-based augmented reality experience for cultural exhibits and heritage exploration."
+  />
+  <meta name="theme-color" content="#0c203d" />
+
+  <title>HeritageLens | AR Exhibit Experience</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="heritage-site">
+  <header class="top-navigation">
+    <div class="navigation-inner">
+      <a class="logo" href="index.html" aria-label="HeritageLens home">
+        <span class="logo-symbol" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+
+        <span class="logo-text">
+          <strong>Heritage</strong><span>Lens</span>
+        </span>
+      </a>
+
+      <nav class="desktop-navigation" aria-label="Main navigation">
+        <a href="#experience">Experience</a>
+        <a href="#visitor-flow">How to use</a>
+        <a href="#about">About</a>
+      </nav>
+
+      <a class="nav-action" href="marker.html">
+        Open Exhibit
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+    <section class="product-hero">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <p class="product-label">
+            <span class="label-dot"></span>
+            DIGITAL HERITAGE EXPERIENCE
+          </p>
+
+          <h1>
+            See the stories
+            <span>behind the artefacts.</span>
+          </h1>
+
+          <p class="hero-description">
+            HeritageLens lets visitors uncover digital objects and contextual
+            stories through augmented reality—directly in the browser, with no
+            app installation required.
+          </p>
+
+          <div class="hero-buttons">
+            <a class="button-primary" href="marker.html">
+              Explore an exhibit
+              <span aria-hidden="true">→</span>
+            </a>
+
+            <a class="button-secondary" href="markerless.html">
+              Try Space View
+            </a>
+          </div>
+
+          <div class="capabilities-row" aria-label="Platform capabilities">
+            <div class="capability">
+              <span class="capability-icon" aria-hidden="true">◌</span>
+              <span>Mobile browser</span>
+            </div>
+
+            <div class="capability">
+              <span class="capability-icon" aria-hidden="true">⌁</span>
+              <span>No installation</span>
+            </div>
+
+            <div class="capability">
+              <span class="capability-icon" aria-hidden="true">◈</span>
+              <span>Interactive 3D</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CSS-only visual preview -->
+        <div class="hero-visual" aria-label="Preview of a virtual heritage object in augmented reality">
+          <div class="visual-grid"></div>
+
+          <div class="visual-glow visual-glow-one"></div>
+          <div class="visual-glow visual-glow-two"></div>
+
+          <div class="ar-device-frame">
+            <div class="device-top-bar">
+              <span class="camera-dot"></span>
+              <span>HERITAGELENS / EXHIBIT</span>
+              <span class="signal-icon">◔</span>
+            </div>
+
+            <div class="ar-view">
+              <div class="ar-reticle">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <div class="artefact-platform"></div>
+
+              <div class="artefact-preview">
+                <div class="preview-base"></div>
+                <div class="preview-ring preview-ring-one"></div>
+                <div class="preview-dome preview-dome-one"></div>
+                <div class="preview-ring preview-ring-two"></div>
+                <div class="preview-dome preview-dome-two"></div>
+                <div class="preview-spire"></div>
+                <div class="preview-orb"></div>
+              </div>
+
+              <div class="object-tag">
+                <span class="tag-dot"></span>
+                Golden Stupa
+              </div>
+            </div>
+
+            <div class="device-bottom-bar">
+              <span>Explore object</span>
+              <span class="scan-status">
+                <i></i>
+                Tracked
+              </span>
+            </div>
+          </div>
+
+          <div class="visual-note visual-note-top">
+            <span class="note-icon">✦</span>
+            <span>Augmented object detected</span>
+          </div>
+
+          <div class="visual-note visual-note-bottom">
+            <span>01</span>
+            <p>
+              Exhibit Mode
+              <strong>Marker recognition</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         EXPERIENCE OPTIONS
+         ===================================================== -->
+    <section id="experience" class="experience-section">
+      <div class="section-intro">
+        <p class="section-label">THE EXPERIENCE</p>
+
+        <div class="section-heading-row">
+          <h2>Choose how you want to explore.</h2>
+
+          <p>
+            Use a marker at an exhibit, or place a digital artefact in your
+            own surroundings.
+          </p>
+        </div>
+      </div>
+
+      <div class="experience-cards">
+        <article class="experience-card experience-card-dark">
+          <div class="card-top-row">
+            <span class="card-number">01</span>
+            <span class="card-icon">▣</span>
+          </div>
+
+          <p class="card-eyebrow">EXHIBIT MODE</p>
+
+          <h3>Bring an exhibit to life.</h3>
+
+          <p>
+            Scan a HeritageLens Exhibit Marker to reveal a three-dimensional
+            object, view it from different angles, and access its story.
+          </p>
+
+          <ul class="feature-list">
+            <li>Marker-based recognition</li>
+            <li>Interactive 3D artefact</li>
+            <li>Object information panel</li>
+          </ul>
+
+          <a class="card-action card-action-light" href="marker.html">
+            Open Exhibit Mode
+            <span aria-hidden="true">→</span>
+          </a>
+        </article>
+
+        <article class="experience-card experience-card-light">
+          <div class="card-top-row">
+            <span class="card-number">02</span>
+            <span class="card-icon card-icon-gold">⌾</span>
+          </div>
+
+          <p class="card-eyebrow">SPACE VIEW</p>
+
+          <h3>Place heritage in your space.</h3>
+
+          <p>
+            Find a flat surface with your camera, place a digital artefact, and
+            adjust its scale and orientation to explore it in context.
+          </p>
+
+          <ul class="feature-list">
+            <li>Surface detection</li>
+            <li>Tap-to-place interaction</li>
+            <li>Rotate, scale, and reset</li>
+          </ul>
+
+          <a class="card-action card-action-dark" href="markerless.html">
+            Try Space View
+            <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         VISITOR FLOW
+         ===================================================== -->
+    <section id="visitor-flow" class="visitor-flow-section">
+      <div class="visitor-flow-inner">
+        <div class="flow-heading">
+          <p class="section-label">START IN SECONDS</p>
+          <h2>A simple visitor journey.</h2>
+          <p>
+            HeritageLens is designed to work without accounts, downloads, or
+            complicated setup.
+          </p>
+        </div>
+
+        <ol class="flow-steps">
+          <li>
+            <span class="flow-step-number">1</span>
+            <div>
+              <h3>Open HeritageLens</h3>
+              <p>Use a supported mobile browser and choose an experience.</p>
+            </div>
+          </li>
+
+          <li>
+            <span class="flow-step-number">2</span>
+            <div>
+              <h3>Allow camera access</h3>
+              <p>Your device camera enables the augmented reality view.</p>
+            </div>
+          </li>
+
+          <li>
+            <span class="flow-step-number">3</span>
+            <div>
+              <h3>Scan or place</h3>
+              <p>Scan an exhibit marker or find a surface for Space View.</p>
+            </div>
+          </li>
+
+          <li>
+            <span class="flow-step-number">4</span>
+            <div>
+              <h3>Explore the object</h3>
+              <p>Use the on-screen controls to inspect and learn more.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         ABOUT
+         ===================================================== -->
+    <section id="about" class="about-product-section">
+      <div class="about-product-inner">
+        <p class="section-label">WHY HERITAGELENS</p>
+
+        <div class="about-grid">
+          <h2>
+            A more personal way to encounter cultural heritage.
+          </h2>
+
+          <div>
+            <p>
+              HeritageLens connects physical exhibits with accessible digital
+              interaction. It is designed for museums, visitor centres,
+              educational spaces, and anyone interested in exploring cultural
+              objects beyond a traditional display.
+            </p>
+
+            <a class="about-link" href="marker.html">
+              Start exploring
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="product-footer">
+    <div class="footer-inner">
+      <a class="logo footer-logo" href="index.html" aria-label="HeritageLens home">
+        <span class="logo-symbol" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+
+        <span class="logo-text">
+          <strong>Heritage</strong><span>Lens</span>
+        </span>
+      </a>
+
+      <p>Digital experiences for cultural discovery.</p>
+
+      <p>© 2026 HeritageLens</p>
+    </div>
+  </footer>
+</body>
+</html>
