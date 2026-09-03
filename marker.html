@@ -173,12 +173,12 @@
            ================================================== -->
       <a-entity
         id="heritageObject"
-        position="0 0.22 0"
-        rotation="-90 0 0"
-        scale="0.78 0.78 0.78"
-        animation="property: rotation; to: -90 360 0; dur: 7000; easing: linear; loop: true"
-        >
-                <!-- Ground shadow gives the object more depth -->
+        position="0 0.16 0"
+        rotation="0 0 0"
+        scale="1 1 1"
+        animation="property: rotation; to: 0 360 0; dur: 7000; easing: linear; loop: true"
+      >
+        <!-- Ground shadow gives the object more depth -->
         <a-circle
           position="0 0.005 0"
           rotation="-90 0 0"
@@ -212,7 +212,7 @@
           radius="0.43"
           scale="1 0.72 1"
           color="#D79C25"
-          material="roughness: 0.52; metalness: 0.24"
+          material="roughness: 0.34; metalness: 0.46"
         ></a-sphere>
 
         <!-- Decorative lower ring -->
@@ -271,26 +271,27 @@
 
         <!-- Artefact name above object -->
         <a-text
-            value="Golden Stupa"
-            position="0 1.55 0"
-            rotation="-90 0 0"
-            align="center"
-            anchor="center"
-            width="1.1"
-            color="#FFF4C9"
-            shader="msdf"
+          value="Golden Stupa"
+          position="0 1.76 0"
+          rotation="-90 0 0"
+          align="center"
+          anchor="center"
+          width="1.45"
+          color="#FFFFFF"
+          shader="msdf"
+          negate="false"
         ></a-text>
 
         <!-- Object-level warm lighting -->
         <a-light
-            type="point"
-            color="#FFE6A6"
-            intensity="0.85"
-            distance="2.5"
-            decay="1.4"
-            position="0.4 1.2 0.7"
-            ></a-light>
-        </a-entity>
+          type="point"
+          color="#FFF1C1"
+          intensity="1.3"
+          distance="3"
+          decay="1.2"
+          position="0 1.35 0.8"
+        ></a-light>
+      </a-entity>
 
       <!-- ==================================================
            FINAL GLB MODEL EXAMPLE
