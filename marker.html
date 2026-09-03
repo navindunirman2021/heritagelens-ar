@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <meta
+    name="description"
+    content="HeritageLens Exhibit Mode - reveal a digital heritage artefact through augmented reality."
+  />
+  <meta name="theme-color" content="#0a1f44" />
+
+  <title>Exhibit Mode | HeritageLens</title>
+
+  <!-- Main application styling -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- A-Frame 3D framework -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- AR.js marker tracking library -->
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
+
+  <!-- HeritageLens marker interaction logic -->
+  <script src="js/marker.js" defer></script>
+</head>
+
+<body class="ar-page">
+  <!-- ======================================================
+       INTERFACE OVERLAY
+       This remains above the live camera / AR scene.
+       ====================================================== -->
+  <div class="ar-overlay">
+    <header class="ar-top-bar">
+      <div class="ar-brand">
+        <span class="ar-brand-mark" aria-hidden="true">HL</span>
+
+        <div>
+          <p class="ar-title">HeritageLens</p>
+          <p class="ar-mode-label">Exhibit Mode</p>
+        </div>
+      </div>
+
+      <a class="back-button" href="index.html" aria-label="Return to HeritageLens home">
+        ← Home
+      </a>
+    </header>
+  </div>
+
+  <!-- Live AR status feedback -->
+  <p id="arStatus" class="ar-status" role="status" aria-live="polite">
+    Point your camera at a HeritageLens Exhibit Marker.
+  </p>
+
+  <!-- Intro message shown before the marker is found -->
+  <section id="scanGuide" class="scan-guide">
+    <span class="scan-guide-icon" aria-hidden="true">▣</span>
+
+    <div>
+      <p class="scan-guide-title">Ready to explore?</p>
+      <p class="scan-guide-text">
+        Centre the HeritageLens Exhibit Marker in your camera view.
+      </p>
+    </div>
+  </section>
+
+  <!-- Artefact information panel -->
+  <section id="infoPanel" class="info-panel" hidden aria-labelledby="artefactInfoTitle">
+    <button
+      id="closeInfoButton"
+      class="close-info-button"
+      type="button"
+      aria-label="Close artefact information"
+    >
+      Close
+    </button>
+
+    <p class="info-kicker">Digital Collection</p>
+
+    <h2 id="artefactInfoTitle">The Golden Stupa</h2>
+
+    <p>
+      This interactive digital artefact is inspired by the architectural form
+      of a stupa: a structure recognized for its dome, elevated spire, and
+      symbolic vertical form. Through augmented reality, HeritageLens allows
+      visitors to inspect the object from different viewpoints in their own
+      environment.
+    </p>
+
+    <div class="artefact-meta">
+      <div class="artefact-meta-item">
+        <span class="meta-label">Category</span>
+        <span class="meta-value">Sacred Architecture</span>
+      </div>
+
+      <div class="artefact-meta-item">
+        <span class="meta-label">Experience</span>
+        <span class="meta-value">Interactive 3D View</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom interaction controls -->
+  <nav class="ar-controls" aria-label="Artefact controls">
+    <button id="rotateButton" class="ar-control-button" type="button">
+      <span class="control-icon" aria-hidden="true">↻</span>
+      View Another Angle
+    </button>
+
+    <button id="pauseButton" class="ar-control-button" type="button">
+      <span class="control-icon" aria-hidden="true">Ⅱ</span>
+      Pause Motion
+    </button>
+
+    <button id="infoButton" class="ar-control-button ar-control-primary" type="button">
+      <span class="control-icon" aria-hidden="true">i</span>
+      Discover More
+    </button>
+  </nav>
+
+  <!-- ======================================================
+       A-FRAME + AR.JS SCENE
+       The scene opens the camera and detects the Hiro marker.
+       ====================================================== -->
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    renderer="antialias: true; alpha: true; precision: mediump; colorManagement: true"
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; maxDetectionRate: 30;"
+  >
+    <!-- ====================================================
+         Asset management
+
+         When you download your final optimized GLB model,
+         add it here and then replace the temporary model
+         entity below with the commented GLB entity.
+         ==================================================== -->
+    <a-assets timeout="15000">
+      <!--
+      FINAL MODEL EXAMPLE:
+
+      Save your licensed GLB model as:
+      assets/models/golden-stupa.glb
+
+      Then uncomment this line:
+
+      <a-asset-item
+        id="goldenStupaModel"
+        src="assets/models/golden-stupa.glb"
+      ></a-asset-item>
+      -->
+    </a-assets>
+
+    <!-- Standard Hiro marker: marker-based AR tracking -->
+    <a-marker
+      id="hiroMarker"
+      preset="hiro"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
+      emitevents="true"
+    >
+      <!-- ==================================================
+           TEMPORARY 3D ARTEFACT
+
+           This hand-built A-Frame stupa prototype proves
+           marker detection, lighting, animation, and UI
+           interaction. Replace it with your GLB model later.
+           ================================================== -->
+      <a-entity
+        id="heritageObject"
+        position="0 0.16 0"
+        rotation="0 0 0"
+        scale="1 1 1"
+        animation="property: rotation; to: 0 360 0; dur: 7000; easing: linear; loop: true"
+      >
+        <!-- Ground shadow gives the object more depth -->
+        <a-circle
+          position="0 0.005 0"
+          rotation="-90 0 0"
+          radius="0.76"
+          color="#1A0F08"
+          opacity="0.32"
+          material="transparent: true; opacity: 0.32"
+        ></a-circle>
+
+        <!-- Stone base -->
+        <a-cylinder
+          position="0 0.08 0"
+          radius="0.65"
+          height="0.16"
+          color="#4A2B18"
+          material="roughness: 0.76; metalness: 0.08"
+        ></a-cylinder>
+
+        <!-- Gold foundation ring -->
+        <a-cylinder
+          position="0 0.19 0"
+          radius="0.53"
+          height="0.08"
+          color="#A86B0D"
+          material="roughness: 0.36; metalness: 0.58"
+        ></a-cylinder>
+
+        <!-- Main dome -->
+        <a-sphere
+          position="0 0.47 0"
+          radius="0.43"
+          scale="1 0.72 1"
+          color="#D79C25"
+          material="roughness: 0.34; metalness: 0.46"
+        ></a-sphere>
+
+        <!-- Decorative lower ring -->
+        <a-torus
+          position="0 0.23 0"
+          radius="0.43"
+          radius-tubular="0.025"
+          color="#F4CE6A"
+          material="roughness: 0.24; metalness: 0.62"
+        ></a-torus>
+
+        <!-- Upper dome -->
+        <a-sphere
+          position="0 0.76 0"
+          radius="0.245"
+          scale="1 0.64 1"
+          color="#E8BC46"
+          material="roughness: 0.28; metalness: 0.5"
+        ></a-sphere>
+
+        <!-- Decorative upper ring -->
+        <a-torus
+          position="0 0.79 0"
+          radius="0.205"
+          radius-tubular="0.018"
+          color="#FFF1B4"
+          material="roughness: 0.18; metalness: 0.7"
+        ></a-torus>
+
+        <!-- Spire base -->
+        <a-cylinder
+          position="0 0.95 0"
+          radius="0.1"
+          height="0.08"
+          color="#F6D875"
+          material="roughness: 0.22; metalness: 0.68"
+        ></a-cylinder>
+
+        <!-- Spire -->
+        <a-cone
+          position="0 1.22 0"
+          radius-bottom="0.1"
+          radius-top="0.018"
+          height="0.55"
+          color="#FFE9A2"
+          material="roughness: 0.2; metalness: 0.74"
+        ></a-cone>
+
+        <!-- Final ornament -->
+        <a-sphere
+          position="0 1.52 0"
+          radius="0.045"
+          color="#FFF4C9"
+          material="roughness: 0.12; metalness: 0.8"
+        ></a-sphere>
+
+        <!-- Artefact name above object -->
+        <a-text
+          value="Golden Stupa"
+          position="0 1.76 0"
+          rotation="-90 0 0"
+          align="center"
+          anchor="center"
+          width="1.45"
+          color="#FFFFFF"
+          shader="msdf"
+          negate="false"
+        ></a-text>
+
+        <!-- Object-level warm lighting -->
+        <a-light
+          type="point"
+          color="#FFF1C1"
+          intensity="1.3"
+          distance="3"
+          decay="1.2"
+          position="0 1.35 0.8"
+        ></a-light>
+      </a-entity>
+
+      <!-- ==================================================
+           FINAL GLB MODEL EXAMPLE
+
+           When golden-stupa.glb is ready, delete or comment
+           out the temporary a-entity above and uncomment this:
+
+      <a-entity
+        id="heritageObject"
+        gltf-model="#goldenStupaModel"
+        position="0 0.05 0"
+        rotation="0 0 0"
+        scale="0.45 0.45 0.45"
+        animation="property: rotation; to: 0 360 0; dur: 7000; easing: linear; loop: true"
+      ></a-entity>
+
+           You may need to adjust scale, position, and rotation
+           based on your model.
+           ================================================== -->
+    </a-marker>
+
+    <!-- General scene illumination -->
+    <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.82"></a-entity>
+
+    <!-- AR camera -->
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <!-- ======================================================
+       Lightweight page-specific styling
+       This works with your existing global style.css.
+       ====================================================== -->
+  <style>
+    .ar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ar-brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 9px;
+      background: rgba(213, 159, 38, 0.92);
+      color: #0a1f44;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ar-mode-label {
+      margin: 2px 0 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .scan-guide {
+      position: fixed;
+      z-index: 20;
+      top: 78px;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(calc(100% - 32px), 420px);
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.58);
+      color: #ffffff;
+      transform: translateX(-50%);
+      backdrop-filter: blur(8px);
+    }
+
+    .scan-guide-icon {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(213, 159, 38, 0.9);
+      color: #0a1f44;
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .scan-guide-title {
+      margin: 0 0 3px;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .scan-guide-text {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .info-kicker {
+      margin: 0 0 5px;
+      color: #1456a0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .artefact-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .artefact-meta-item {
+      padding: 10px;
+      border-radius: 9px;
+      background: #f1f6fc;
+    }
+
+    .meta-label,
+    .meta-value {
+      display: block;
+    }
+
+    .meta-label {
+      margin-bottom: 4px;
+      color: #5d6875;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: #0a1f44;
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .ar-control-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .ar-control-primary {
+      background: rgba(213, 159, 38, 0.96);
+      color: #0a1f44;
+    }
+
+    .control-icon {
+      display: inline-grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .ar-control-primary .control-icon {
+      background: rgba(10, 31, 68, 0.14);
+    }
+
+    @media (max-width: 640px) {
+      .scan-guide {
+        top: 72px;
+      }
+
+      .artefact-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>
