@@ -8,181 +8,254 @@
   />
   <meta
     name="description"
-    content="HeritageLens Space View lets visitors place and explore a digital heritage lion through markerless WebXR augmented reality."
+    content="HeritageLens Exhibit Mode presents a digital interpretive model inspired by Nadungamuwa Vijaya Raja through marker-based augmented reality."
   />
-  <meta name="theme-color" content="#0c203d" />
+  <meta name="theme-color" content="#0a1f44" />
 
-  <title>Heritage Lion | Space View | HeritageLens</title>
+  <title>Nadungamuwa Vijaya Raja | HeritageLens</title>
 
   <link rel="stylesheet" href="style.css" />
 
-  <script type="module" src="js/markerless.js"></script>
+  <!-- A-Frame framework -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- AR.js marker tracking -->
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
+
+  <!-- Elephant exhibit interactions -->
+  <script src="js/marker.js" defer></script>
 </head>
 
-<body class="space-view-page">
+<body class="ar-page">
   <!-- Top navigation overlay -->
-  <header class="space-topbar">
-    <a
-      class="space-brand"
-      href="index.html"
-      aria-label="Return to HeritageLens home"
-    >
-      <span class="space-brand-mark" aria-hidden="true">HL</span>
+  <div class="ar-overlay">
+    <header class="ar-top-bar">
+      <div class="ar-brand">
+        <span class="ar-brand-mark" aria-hidden="true">HL</span>
 
-      <span>
-        <strong>HeritageLens</strong>
-        <small>Space View</small>
-      </span>
-    </a>
-
-    <a class="space-home-link" href="index.html">Exit</a>
-  </header>
-
-  <main class="space-main">
-    <!-- Initial panel shown before AR begins -->
-    <section id="startPanel" class="space-panel">
-      <p class="space-eyebrow">MARKERLESS AUGMENTED REALITY</p>
-
-      <h1>Place a heritage lion in your space.</h1>
-
-      <p id="supportMessage">
-        Use your camera to find a flat surface, then place the digital lion
-        and inspect it from different angles.
-      </p>
-
-      <div class="space-requirements">
-        <span>Chrome on Android</span>
-        <span>Camera access</span>
-        <span>Flat surface</span>
+        <div>
+          <p class="ar-title">HeritageLens</p>
+          <p class="ar-mode-label">Exhibit Mode</p>
+        </div>
       </div>
 
-      <button id="startARButton" class="space-primary-button" type="button">
-        Start Space View
-        <span aria-hidden="true">→</span>
-      </button>
-
-      <a class="space-secondary-link" href="marker.html">
-        Prefer a marker? Open Exhibit Mode
+      <a
+        class="back-button"
+        href="index.html"
+        aria-label="Return to HeritageLens home"
+      >
+        ← Home
       </a>
-    </section>
+    </header>
+  </div>
 
-    <!-- Shown on iPhone Safari, desktop, or unsupported browser/device -->
-    <section id="unsupportedPanel" class="space-panel" hidden>
-      <p class="space-eyebrow">DEVICE COMPATIBILITY</p>
+  <!-- Live status text -->
+  <p id="arStatus" class="ar-status" role="status" aria-live="polite">
+    Point your camera at a HeritageLens Exhibit Marker.
+  </p>
 
-      <h1>Space View is not available on this device.</h1>
+  <!-- Scan guidance -->
+  <section id="scanGuide" class="scan-guide">
+    <span class="scan-guide-icon" aria-hidden="true">▣</span>
 
-      <p>
-        This experience requires Google Chrome on an AR-capable Android device.
-        You can still explore HeritageLens using the marker-based Exhibit Mode.
+    <div>
+      <p class="scan-guide-title">Ready to explore?</p>
+      <p class="scan-guide-text">
+        Centre the HeritageLens Exhibit Marker in your camera view.
       </p>
+    </div>
+  </section>
 
-      <a class="space-primary-button" href="marker.html">
-        Open Exhibit Mode
-        <span aria-hidden="true">→</span>
-      </a>
+  <!-- Information panel -->
+  <section
+    id="infoPanel"
+    class="info-panel"
+    hidden
+    aria-labelledby="artefactInfoTitle"
+  >
+    <button
+      id="closeInfoButton"
+      class="close-info-button"
+      type="button"
+      aria-label="Close exhibit information"
+    >
+      Close
+    </button>
 
-      <a class="space-secondary-link" href="index.html">
-        Return to home
-      </a>
-    </section>
+    <p class="info-kicker">Digital Collection</p>
 
-    <!-- AR guidance -->
-    <p id="arMessage" class="space-status" hidden aria-live="polite">
-      Preparing Heritage Lion…
+    <h2 id="artefactInfoTitle">Nadungamuwa Vijaya Raja</h2>
+
+    <p class="info-subtitle">
+      Ceremonial Tusker • Digital Interpretive Model
     </p>
 
-    <!-- Interaction controls -->
-    <section
-      id="arControls"
-      class="space-controls"
-      hidden
-      aria-label="Heritage Lion controls"
-    >
-      <button
-        id="placeButton"
-        class="space-control space-control-primary"
-        type="button"
-        disabled
-      >
-        Place Lion
-      </button>
+    <p>
+      Nadungamuwa Vijaya Raja was a renowned ceremonial tusker associated with
+      Sri Lanka’s Kandy Esala Perahera. This interactive model is inspired by
+      his cultural significance and allows visitors to explore the form and
+      scale of a ceremonial elephant through augmented reality.
+    </p>
 
-      <button id="rotateButton" class="space-control" type="button" disabled>
-        Rotate
-      </button>
+    <p class="interpretive-note">
+      This is a digital interpretive model for cultural learning and is not
+      presented as an exact scanned replica of Nadungamuwa Vijaya Raja.
+    </p>
 
-      <button id="scaleUpButton" class="space-control" type="button" disabled>
-        Scale +
-      </button>
+    <div class="artefact-meta">
+      <div class="artefact-meta-item">
+        <span class="meta-label">Cultural context</span>
+        <span class="meta-value">Kandy Esala Perahera</span>
+      </div>
 
-      <button
-        id="scaleDownButton"
-        class="space-control"
-        type="button"
-        disabled
-      >
-        Scale −
-      </button>
+      <div class="artefact-meta-item">
+        <span class="meta-label">Exhibit type</span>
+        <span class="meta-value">Interactive AR interpretation</span>
+      </div>
+    </div>
+  </section>
 
-      <button
-        id="resetButton"
-        class="space-control space-control-danger"
-        type="button"
-        disabled
-      >
-        Reset
-      </button>
-    </section>
+  <!-- Visitor interaction controls -->
+  <nav class="ar-controls" aria-label="Elephant exhibit controls">
+    <button id="rotateButton" class="ar-control-button" type="button">
+      <span class="control-icon" aria-hidden="true">↻</span>
+      View Another Angle
+    </button>
 
-    <!-- Model information panel -->
-    <section
-      id="artefactPanel"
-      class="space-artefact-panel"
-      hidden
-      aria-labelledby="lionInfoTitle"
-    >
-      <button
-        id="closeArtefactPanel"
-        class="space-close-button"
-        type="button"
-        aria-label="Close Heritage Lion information"
-      >
-        Close
-      </button>
+    <button id="guidedViewButton" class="ar-control-button" type="button">
+      <span class="control-icon" aria-hidden="true">◌</span>
+      Guided View
+    </button>
 
-      <p class="space-eyebrow">DIGITAL COLLECTION</p>
-
-      <h2 id="lionInfoTitle">Heritage Lion</h2>
-
-      <p class="space-info-subtitle">
-        Cultural Guardian • Interactive AR Interpretation
-      </p>
-
-      <p>
-        The lion is a familiar symbol in Sri Lankan cultural and artistic
-        traditions, representing strength, guardianship, and heritage. Space
-        View allows visitors to place this digital artefact in their own
-        environment and inspect its shape, scale, and details.
-      </p>
-
-      <p class="space-interpretive-note">
-        This is a digital interpretive model intended for cultural learning.
-        It is not presented as an exact replica of a specific historical
-        sculpture.
-      </p>
-    </section>
-
-    <!-- Opens the model information panel after placement -->
     <button
       id="infoButton"
-      class="space-info-button"
+      class="ar-control-button ar-control-primary"
       type="button"
-      hidden
-      aria-label="Open Heritage Lion information"
     >
-      i
+      <span class="control-icon" aria-hidden="true">i</span>
+      Discover More
     </button>
-  </main>
+  </nav>
+
+  <!-- A-Frame + AR.js marker scene -->
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    renderer="antialias: true; alpha: true; precision: mediump; colorManagement: true"
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; maxDetectionRate: 30;"
+  >
+    <!-- GLB asset declaration -->
+    <a-assets timeout="30000">
+      <a-asset-item
+        id="elephantModel"
+        src="asset/models/Elephant.glb"
+      ></a-asset-item>
+    </a-assets>
+
+    <!-- Hiro marker -->
+    <a-marker
+      id="hiroMarker"
+      preset="hiro"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
+      emitevents="true"
+    >
+      <!-- Elephant model: still by default -->
+      <a-entity
+        id="heritageObject"
+        gltf-model="#elephantModel"
+        position="0 0.02 0"
+        rotation="-90 180 0"
+        scale="0.35 0.35 0.35"
+      ></a-entity>
+
+      <!-- Soft visual base -->
+      <a-circle
+        position="0 0.004 0"
+        rotation="-90 0 0"
+        radius="0.62"
+        material="color: #101820; transparent: true; opacity: 0.26"
+      ></a-circle>
+
+      <!-- Museum-style AR name plaque -->
+      <a-entity
+        id="elephantLabel"
+        position="0 1.12 0"
+        rotation="-90 0 0"
+      >
+        <a-plane
+          width="1.62"
+          height="0.36"
+          position="0 0 0"
+          material="color: #07172C; transparent: true; opacity: 0.86"
+        ></a-plane>
+
+        <a-plane
+          width="1.62"
+          height="0.025"
+          position="0 0.158 0.006"
+          material="color: #D59F26; transparent: true; opacity: 1"
+        ></a-plane>
+
+        <a-text
+          value="Nadungamuwa Vijaya Raja"
+          position="0 0.06 0.012"
+          align="center"
+          anchor="center"
+          baseline="center"
+          width="1.45"
+          color="#FFF4C9"
+          font="roboto"
+          shader="msdf"
+        ></a-text>
+
+        <a-text
+          value="CEREMONIAL TUSKER | HERITAGELENS COLLECTION"
+          position="0 -0.085 0.012"
+          align="center"
+          anchor="center"
+          baseline="center"
+          width="1.28"
+          color="#D7E4F4"
+          font="roboto"
+          shader="msdf"
+          letter-spacing="0.055"
+        ></a-text>
+      </a-entity>
+
+      <!-- Local lighting -->
+      <a-light
+        type="ambient"
+        color="#FFFFFF"
+        intensity="1.25"
+      ></a-light>
+
+      <a-light
+        type="directional"
+        color="#FFE6B0"
+        intensity="1.05"
+        position="1 2 1"
+      ></a-light>
+
+      <a-light
+        type="point"
+        color="#FFF3D3"
+        intensity="0.35"
+        distance="2"
+        position="-0.5 0.9 0.7"
+      ></a-light>
+    </a-marker>
+
+    <!-- Scene light -->
+    <a-entity
+      light="type: ambient; color: #FFFFFF; intensity: 0.75"
+    ></a-entity>
+
+    <!-- Camera -->
+    <a-entity camera></a-entity>
+  </a-scene>
 </body>
 </html>
