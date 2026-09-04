@@ -10,31 +10,75 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeInfoButton = document.getElementById("closeInfoButton");
   const infoPanel = document.getElementById("infoPanel");
 
+  if (
+    !marker ||
+    !heritageObject ||
+    !status ||
+    !rotateButton ||
+    !pauseButton ||
+    !infoButton ||
+    !closeInfoButton ||
+    !infoPanel
+  ) {
+    console.error(
+      "HeritageLens Exhibit Mode could not initialise because one or more required elements are missing."
+    );
+    return;
+  }
+
   let isAnimationPaused = false;
   let isMarkerVisible = false;
+
+  const rotationAnimation =
+    "property: rotation; to: -90 360 0; dur: 12000; easing: linear; loop: true";
 
   function setStatus(message) {
     status.textContent = message;
   }
 
-  marker.addEventListener("markerFound", () => {
-    isMarkerVisible = true;
+  function showScanGuide() {
+    if (scanGuide) {
+      scanGuide.style.display = "flex";
+    }
+  }
 
+  function hideScanGuide() {
     if (scanGuide) {
       scanGuide.style.display = "none";
     }
+  }
 
-    setStatus("Exhibit detected. Explore the Golden Stupa from every angle.");
+  function updatePauseButton(isPaused) {
+    if (isPaused) {
+      pauseButton.innerHTML = `
+        <span class="control-icon" aria-hidden="true">▶</span>
+        Resume Motion
+      `;
+      return;
+    }
+
+    pauseButton.innerHTML = `
+      <span class="control-icon" aria-hidden="true">Ⅱ</span>
+      Pause Motion
+    `;
+  }
+
+  marker.addEventListener("markerFound", () => {
+    isMarkerVisible = true;
+    hideScanGuide();
+
+    setStatus(
+      "Exhibit detected. Explore the Heritage Elephant from every angle."
+    );
   });
 
   marker.addEventListener("markerLost", () => {
     isMarkerVisible = false;
+    showScanGuide();
 
-    if (scanGuide) {
-      scanGuide.style.display = "flex";
-    }
-
-    setStatus("Exhibit Marker not visible. Centre the marker in your camera view.");
+    setStatus(
+      "Exhibit Marker not visible. Centre the marker in your camera view."
+    );
   });
 
   rotateButton.addEventListener("click", () => {
@@ -47,49 +91,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (isMarkerVisible) {
-      setStatus("Viewing the artefact from another angle.");
+      setStatus("Viewing the Heritage Elephant from another angle.");
     } else {
-      setStatus("Your new viewing angle is ready. Scan the Exhibit Marker to continue.");
+      setStatus(
+        "Your new viewing angle is ready. Scan the Exhibit Marker to continue."
+      );
     }
   });
 
   pauseButton.addEventListener("click", () => {
     if (isAnimationPaused) {
-      heritageObject.setAttribute(
-        "animation",
-        "property: rotation; to: 0 360 0; dur: 7000; easing: linear; loop: true"
-      );
+      heritageObject.setAttribute("animation", rotationAnimation);
 
-      pauseButton.innerHTML = `
-        <span class="control-icon" aria-hidden="true">Ⅱ</span>
-        Pause Motion
-      `;
+      isAnimationPaused = false;
+      updatePauseButton(false);
 
-      setStatus("Artefact motion resumed.");
-    } else {
-      heritageObject.removeAttribute("animation");
-
-      pauseButton.innerHTML = `
-        <span class="control-icon" aria-hidden="true">▶</span>
-        Resume Motion
-      `;
-
-      setStatus("Artefact motion paused.");
+      setStatus("Heritage Elephant motion resumed.");
+      return;
     }
 
-    isAnimationPaused = !isAnimationPaused;
+    heritageObject.removeAttribute("animation");
+
+    isAnimationPaused = true;
+    updatePauseButton(true);
+
+    setStatus("Heritage Elephant motion paused.");
   });
 
   infoButton.addEventListener("click", () => {
     infoPanel.hidden = false;
-    setStatus("Artefact details opened.");
+    setStatus("Heritage Elephant details opened.");
   });
 
   closeInfoButton.addEventListener("click", () => {
     infoPanel.hidden = true;
 
     if (isMarkerVisible) {
-      setStatus("Continue exploring the Golden Stupa.");
+      setStatus("Continue exploring the Heritage Elephant.");
     } else {
       setStatus("Point your camera at the HeritageLens Exhibit Marker.");
     }
