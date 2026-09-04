@@ -1,5 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js";
 
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/GLTFLoader.js";
+
 const startPanel = document.getElementById("startPanel");
 const unsupportedPanel = document.getElementById("unsupportedPanel");
 const supportMessage = document.getElementById("supportMessage");
@@ -23,8 +25,12 @@ let camera;
 let renderer;
 let controller;
 let reticle;
-let artefact;
+
+let lionModel = null;
 let placedArtefact = null;
+
+let modelReady = false;
+let modelLoadError = false;
 
 let hitTestSource = null;
 let hitTestSourceRequested = false;
@@ -33,12 +39,16 @@ let referenceSpace = null;
 let surfaceFound = false;
 let objectPlaced = false;
 
+const INITIAL_LION_SCALE = 0.25;
+const MIN_LION_SCALE = 0.12;
+const MAX_LION_SCALE = 0.8;
+
 function setMessage(message) {
   arMessage.textContent = message;
 }
 
 function setControlState() {
-  placeButton.disabled = !surfaceFound || objectPlaced;
+  placeButton.disabled = !surfaceFound || objectPlaced || !modelReady;
   rotateButton.disabled = !objectPlaced;
   scaleUpButton.disabled = !objectPlaced;
   scaleDownButton.disabled = !objectPlaced;
@@ -53,155 +63,104 @@ async function checkWebXRSupport() {
   }
 
   try {
-    const supported = await navigator.xr.isSessionSupported("immersive-ar");
+    const isSupported = await navigator.xr.isSessionSupported("immersive-ar");
 
-    if (!supported) {
+    if (!isSupported) {
       startPanel.hidden = true;
       unsupportedPanel.hidden = false;
       return;
     }
 
     supportMessage.textContent =
-      "Your device supports Space View. Move around a flat surface, place a digital artefact, then rotate, resize, and explore it in context.";
+      "Your device supports Space View. Find a flat surface, place the Heritage Lion, then rotate and resize it in your environment.";
   } catch (error) {
+    console.error("Unable to check WebXR support:", error);
     startPanel.hidden = true;
     unsupportedPanel.hidden = false;
   }
 }
 
-function createCeremonialMask() {
-  const group = new THREE.Group();
+function loadHeritageLion() {
+  const loader = new GLTFLoader();
 
-  const goldMaterial = new THREE.MeshStandardMaterial({
-    color: 0xd4a12b,
-    metalness: 0.28,
-    roughness: 0.5
-  });
+  loader.load(
+    "asset/models/Lion.glb",
 
-  const darkGoldMaterial = new THREE.MeshStandardMaterial({
-    color: 0x82480d,
-    metalness: 0.18,
-    roughness: 0.58
-  });
+    (gltf) => {
+      lionModel = gltf.scene;
 
-  const redMaterial = new THREE.MeshStandardMaterial({
-    color: 0x8a1f2d,
-    metalness: 0.08,
-    roughness: 0.6
-  });
+      lionModel.traverse((child) => {
+        if (!child.isMesh) {
+          return;
+        }
 
-  const ivoryMaterial = new THREE.MeshStandardMaterial({
-    color: 0xf2dfb5,
-    metalness: 0.05,
-    roughness: 0.72
-  });
+        child.castShadow = true;
+        child.receiveShadow = true;
 
-  const blackMaterial = new THREE.MeshStandardMaterial({
-    color: 0x17120f,
-    metalness: 0.08,
-    roughness: 0.45
-  });
+        if (child.material) {
+          child.material.needsUpdate = true;
+        }
+      });
 
-  const face = new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 32, 24),
-    goldMaterial
+      /*
+        Starting scale and orientation.
+        Adjust only these values if the Lion looks too large,
+        too small, sideways, or backwards after Android testing.
+      */
+      lionModel.scale.set(
+        INITIAL_LION_SCALE,
+        INITIAL_LION_SCALE,
+        INITIAL_LION_SCALE
+      );
+
+      lionModel.rotation.set(0, Math.PI, 0);
+
+      modelReady = true;
+      modelLoadError = false;
+
+      setControlState();
+
+      console.log("Heritage Lion GLB model loaded successfully.");
+    },
+
+    (progressEvent) => {
+      if (!progressEvent.lengthComputable) {
+        return;
+      }
+
+      const percentage = Math.round(
+        (progressEvent.loaded / progressEvent.total) * 100
+      );
+
+      console.log(`Loading Heritage Lion: ${percentage}%`);
+    },
+
+    (error) => {
+      modelReady = false;
+      modelLoadError = true;
+
+      console.error("Failed to load asset/models/Lion.glb:", error);
+
+      setMessage(
+        "The Heritage Lion could not be loaded. Please refresh and try again."
+      );
+    }
   );
-  face.scale.set(0.85, 1.2, 0.28);
-  face.position.y = 0.2;
-  group.add(face);
-
-  const forehead = new THREE.Mesh(
-    new THREE.SphereGeometry(0.105, 28, 20),
-    darkGoldMaterial
-  );
-  forehead.scale.set(0.9, 1.05, 0.25);
-  forehead.position.set(0, 0.31, 0.045);
-  group.add(forehead);
-
-  const leftEyeSocket = new THREE.Mesh(
-    new THREE.SphereGeometry(0.04, 20, 16),
-    blackMaterial
-  );
-  leftEyeSocket.scale.set(1.35, 0.75, 0.35);
-  leftEyeSocket.position.set(-0.065, 0.225, 0.14);
-  group.add(leftEyeSocket);
-
-  const rightEyeSocket = leftEyeSocket.clone();
-  rightEyeSocket.position.x = 0.065;
-  group.add(rightEyeSocket);
-
-  const leftEye = new THREE.Mesh(
-    new THREE.SphereGeometry(0.018, 16, 12),
-    ivoryMaterial
-  );
-  leftEye.position.set(-0.065, 0.225, 0.16);
-  group.add(leftEye);
-
-  const rightEye = leftEye.clone();
-  rightEye.position.x = 0.065;
-  group.add(rightEye);
-
-  const nose = new THREE.Mesh(
-    new THREE.ConeGeometry(0.035, 0.12, 4),
-    goldMaterial
-  );
-  nose.position.set(0, 0.18, 0.15);
-  nose.rotation.x = Math.PI / 2;
-  group.add(nose);
-
-  const mouth = new THREE.Mesh(
-    new THREE.TorusGeometry(0.045, 0.008, 12, 24, Math.PI),
-    redMaterial
-  );
-  mouth.position.set(0, 0.12, 0.155);
-  mouth.rotation.x = Math.PI;
-  group.add(mouth);
-
-  const leftHorn = new THREE.Mesh(
-    new THREE.ConeGeometry(0.04, 0.22, 18),
-    ivoryMaterial
-  );
-  leftHorn.position.set(-0.14, 0.38, 0);
-  leftHorn.rotation.z = -0.55;
-  group.add(leftHorn);
-
-  const rightHorn = leftHorn.clone();
-  rightHorn.position.x = 0.14;
-  rightHorn.rotation.z = 0.55;
-  group.add(rightHorn);
-
-  const crown = new THREE.Mesh(
-    new THREE.ConeGeometry(0.12, 0.18, 5),
-    redMaterial
-  );
-  crown.position.set(0, 0.48, 0);
-  group.add(crown);
-
-  const base = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.18, 0.22, 0.05, 32),
-    darkGoldMaterial
-  );
-  base.position.y = 0.02;
-  group.add(base);
-
-  group.scale.set(1.2, 1.2, 1.2);
-  group.rotation.y = Math.PI;
-
-  return group;
 }
 
 function createReticle() {
-  const reticleGeometry = new THREE.RingGeometry(0.075, 0.09, 32);
-  reticleGeometry.rotateX(-Math.PI / 2);
+  const geometry = new THREE.RingGeometry(0.075, 0.09, 32);
+  geometry.rotateX(-Math.PI / 2);
 
-  const reticleMaterial = new THREE.MeshBasicMaterial({
+  const material = new THREE.MeshBasicMaterial({
     color: 0xf3cd78,
     transparent: true,
     opacity: 0.9,
     side: THREE.DoubleSide
   });
 
-  const result = new THREE.Mesh(reticleGeometry, reticleMaterial);
+  const result = new THREE.Mesh(geometry, material);
+
   result.matrixAutoUpdate = false;
   result.visible = false;
 
@@ -218,7 +177,7 @@ function initializeScene() {
     20
   );
 
-  const ambientLight = new THREE.HemisphereLight(0xffffff, 0x243247, 2.2);
+  const ambientLight = new THREE.HemisphereLight(0xffffff, 0x26374d, 2.2);
   scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xffe0a1, 2.4);
@@ -240,7 +199,7 @@ function initializeScene() {
   reticle = createReticle();
   scene.add(reticle);
 
-  artefact = createCeremonialMask();
+  loadHeritageLion();
 
   controller = renderer.xr.getController(0);
   controller.addEventListener("select", onSelect);
@@ -269,19 +228,32 @@ async function startAR() {
 
     session.addEventListener("end", onSessionEnd);
 
-    setMessage("Move your device slowly to find a flat surface.");
+    if (modelReady) {
+      setMessage("Move your device slowly to find a flat surface.");
+    } else if (modelLoadError) {
+      setMessage("The Heritage Lion could not be loaded. Please refresh.");
+    } else {
+      setMessage("Preparing Heritage Lion. Please wait...");
+    }
+
     setControlState();
   } catch (error) {
+    console.error("Unable to start Space View:", error);
+
     startARButton.disabled = false;
-    startARButton.textContent = "Start Space View";
+    startARButton.innerHTML =
+      'Start Space View <span aria-hidden="true">→</span>';
+
     startPanel.hidden = true;
     unsupportedPanel.hidden = false;
-
-    console.error("Unable to start immersive AR:", error);
   }
 }
 
 function onSessionEnd() {
+  if (hitTestSource) {
+    hitTestSource.cancel();
+  }
+
   hitTestSourceRequested = false;
   hitTestSource = null;
   referenceSpace = null;
@@ -303,11 +275,14 @@ function onSessionEnd() {
   artefactPanel.hidden = true;
 
   startARButton.disabled = false;
-  startARButton.innerHTML = 'Start Space View <span aria-hidden="true">→</span>';
+  startARButton.innerHTML =
+    'Start Space View <span aria-hidden="true">→</span>';
+
+  setControlState();
 }
 
 function onSelect() {
-  if (!surfaceFound || objectPlaced || !reticle.visible) {
+  if (!surfaceFound || objectPlaced || !reticle.visible || !modelReady) {
     return;
   }
 
@@ -315,11 +290,21 @@ function onSelect() {
 }
 
 function placeArtefact() {
-  placedArtefact = artefact.clone(true);
+  if (!modelReady || !lionModel) {
+    setMessage("Preparing Heritage Lion. Please wait...");
+    return;
+  }
+
+  placedArtefact = lionModel.clone(true);
 
   placedArtefact.position.setFromMatrixPosition(reticle.matrix);
   placedArtefact.quaternion.setFromRotationMatrix(reticle.matrix);
 
+  /*
+    Keep the lion upright after taking its orientation from the
+    surface hit-test. If your model faces the wrong way, adjust
+    lionModel.rotation above rather than changing this.
+  */
   placedArtefact.rotation.x = 0;
   placedArtefact.rotation.z = 0;
 
@@ -328,7 +313,10 @@ function placeArtefact() {
   objectPlaced = true;
   reticle.visible = false;
 
-  setMessage("Artefact placed. Use the controls to explore it.");
+  setMessage(
+    "Heritage Lion placed. Use the controls to rotate, resize, or learn more."
+  );
+
   infoButton.hidden = false;
   setControlState();
 }
@@ -338,8 +326,9 @@ function rotateArtefact() {
     return;
   }
 
-  placedArtefact.rotation.y += Math.PI / 4;
-  setMessage("Artefact rotated.");
+  placedArtefact.rotation.y += Math.PI / 6;
+
+  setMessage("Heritage Lion rotated by 30 degrees.");
 }
 
 function scaleArtefact(multiplier) {
@@ -348,11 +337,19 @@ function scaleArtefact(multiplier) {
   }
 
   const currentScale = placedArtefact.scale.x;
-  const nextScale = THREE.MathUtils.clamp(currentScale * multiplier, 0.45, 2.2);
+  const nextScale = THREE.MathUtils.clamp(
+    currentScale * multiplier,
+    MIN_LION_SCALE,
+    MAX_LION_SCALE
+  );
 
   placedArtefact.scale.set(nextScale, nextScale, nextScale);
 
-  setMessage(multiplier > 1 ? "Artefact enlarged." : "Artefact reduced.");
+  setMessage(
+    multiplier > 1
+      ? "Heritage Lion enlarged."
+      : "Heritage Lion reduced."
+  );
 }
 
 function resetArtefact() {
@@ -362,16 +359,16 @@ function resetArtefact() {
   }
 
   objectPlaced = false;
-  surfaceFound = reticle.visible;
-
   infoButton.hidden = true;
   artefactPanel.hidden = true;
 
-  setMessage(
-    surfaceFound
-      ? "Ready to place again. Select Place Artefact."
-      : "Move your device slowly to find a flat surface."
-  );
+  if (reticle.visible && modelReady) {
+    surfaceFound = true;
+    setMessage("Ready to place the Heritage Lion again.");
+  } else {
+    surfaceFound = false;
+    setMessage("Move your device slowly to find a flat surface.");
+  }
 
   setControlState();
 }
@@ -381,15 +378,27 @@ function render(timestamp, frame) {
     const session = renderer.xr.getSession();
 
     if (!hitTestSourceRequested) {
-      session.requestReferenceSpace("viewer").then((viewerSpace) => {
-        session.requestHitTestSource({ space: viewerSpace }).then((source) => {
+      session
+        .requestReferenceSpace("viewer")
+        .then((viewerSpace) =>
+          session.requestHitTestSource({ space: viewerSpace })
+        )
+        .then((source) => {
           hitTestSource = source;
+        })
+        .catch((error) => {
+          console.error("Unable to create hit-test source:", error);
+          setMessage("Surface tracking could not be started. Please restart.");
         });
-      });
 
-      session.requestReferenceSpace("local").then((space) => {
-        referenceSpace = space;
-      });
+      session
+        .requestReferenceSpace("local")
+        .then((space) => {
+          referenceSpace = space;
+        })
+        .catch((error) => {
+          console.error("Unable to create local reference space:", error);
+        });
 
       hitTestSourceRequested = true;
     }
@@ -407,7 +416,13 @@ function render(timestamp, frame) {
 
           if (!surfaceFound) {
             surfaceFound = true;
-            setMessage("Surface found. Tap Place Artefact.");
+
+            setMessage(
+              modelReady
+                ? "Surface found. Tap Place Lion."
+                : "Surface found. Preparing Heritage Lion..."
+            );
+
             setControlState();
           }
         }
@@ -433,13 +448,14 @@ function onWindowResize() {
 
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 startARButton.addEventListener("click", startAR);
 
 placeButton.addEventListener("click", () => {
-  if (surfaceFound && !objectPlaced) {
+  if (surfaceFound && !objectPlaced && modelReady) {
     placeArtefact();
   }
 });

@@ -8,421 +8,181 @@
   />
   <meta
     name="description"
-    content="HeritageLens Exhibit Mode presents a digital interpretive model inspired by Nadungamuwa Vijaya Raja through marker-based augmented reality."
+    content="HeritageLens Space View lets visitors place and explore a digital heritage lion through markerless WebXR augmented reality."
   />
-  <meta name="theme-color" content="#0a1f44" />
+  <meta name="theme-color" content="#0c203d" />
 
-  <title>Nadungamuwa Vijaya Raja | HeritageLens</title>
+  <title>Heritage Lion | Space View | HeritageLens</title>
 
   <link rel="stylesheet" href="style.css" />
 
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
-
-  <script src="js/marker.js" defer></script>
+  <script type="module" src="js/markerless.js"></script>
 </head>
 
-<body class="ar-page">
-  <div class="ar-overlay">
-    <header class="ar-top-bar">
-      <div class="ar-brand">
-        <span class="ar-brand-mark" aria-hidden="true">HL</span>
-
-        <div>
-          <p class="ar-title">HeritageLens</p>
-          <p class="ar-mode-label">Exhibit Mode</p>
-        </div>
-      </div>
-
-      <a
-        class="back-button"
-        href="index.html"
-        aria-label="Return to HeritageLens home"
-      >
-        ← Home
-      </a>
-    </header>
-  </div>
-
-  <p id="arStatus" class="ar-status" role="status" aria-live="polite">
-    Point your camera at a HeritageLens Exhibit Marker.
-  </p>
-
-  <section id="scanGuide" class="scan-guide">
-    <span class="scan-guide-icon" aria-hidden="true">▣</span>
-
-    <div>
-      <p class="scan-guide-title">Ready to explore?</p>
-      <p class="scan-guide-text">
-        Centre the HeritageLens Exhibit Marker in your camera view.
-      </p>
-    </div>
-  </section>
-
-  <section
-    id="infoPanel"
-    class="info-panel"
-    hidden
-    aria-labelledby="artefactInfoTitle"
-  >
-    <button
-      id="closeInfoButton"
-      class="close-info-button"
-      type="button"
-      aria-label="Close artefact information"
+<body class="space-view-page">
+  <!-- Top navigation overlay -->
+  <header class="space-topbar">
+    <a
+      class="space-brand"
+      href="index.html"
+      aria-label="Return to HeritageLens home"
     >
-      Close
-    </button>
+      <span class="space-brand-mark" aria-hidden="true">HL</span>
 
-    <p class="info-kicker">Digital Collection</p>
+      <span>
+        <strong>HeritageLens</strong>
+        <small>Space View</small>
+      </span>
+    </a>
 
-    <h2 id="artefactInfoTitle">Nadungamuwa Vijaya Raja</h2>
+    <a class="space-home-link" href="index.html">Exit</a>
+  </header>
 
-    <p class="info-subtitle">
-      Ceremonial Tusker • Digital Interpretive Model
-    </p>
+  <main class="space-main">
+    <!-- Initial panel shown before AR begins -->
+    <section id="startPanel" class="space-panel">
+      <p class="space-eyebrow">MARKERLESS AUGMENTED REALITY</p>
 
-    <p>
-      Nadungamuwa Vijaya Raja was a renowned ceremonial tusker associated with
-      Sri Lanka’s Kandy Esala Perahera. This interactive model is inspired by
-      his cultural significance and allows visitors to explore the form and
-      scale of a ceremonial elephant through augmented reality.
-    </p>
+      <h1>Place a heritage lion in your space.</h1>
 
-    <p class="interpretive-note">
-      This is a digital interpretive model for cultural learning and is not
-      presented as an exact scanned replica of Nadungamuwa Vijaya Raja.
-    </p>
+      <p id="supportMessage">
+        Use your camera to find a flat surface, then place the digital lion
+        and inspect it from different angles.
+      </p>
 
-    <div class="artefact-meta">
-      <div class="artefact-meta-item">
-        <span class="meta-label">Cultural context</span>
-        <span class="meta-value">Kandy Esala Perahera</span>
+      <div class="space-requirements">
+        <span>Chrome on Android</span>
+        <span>Camera access</span>
+        <span>Flat surface</span>
       </div>
 
-      <div class="artefact-meta-item">
-        <span class="meta-label">Exhibit type</span>
-        <span class="meta-value">Interactive AR interpretation</span>
-      </div>
-    </div>
-  </section>
+      <button id="startARButton" class="space-primary-button" type="button">
+        Start Space View
+        <span aria-hidden="true">→</span>
+      </button>
 
-  <nav class="ar-controls" aria-label="Artefact controls">
-    <button id="rotateButton" class="ar-control-button" type="button">
-      <span class="control-icon" aria-hidden="true">↻</span>
-      View Another Angle
-    </button>
+      <a class="space-secondary-link" href="marker.html">
+        Prefer a marker? Open Exhibit Mode
+      </a>
+    </section>
 
-    <button id="guidedViewButton" class="ar-control-button" type="button">
-      <span class="control-icon" aria-hidden="true">◌</span>
-      Guided View
-    </button>
+    <!-- Shown on iPhone Safari, desktop, or unsupported browser/device -->
+    <section id="unsupportedPanel" class="space-panel" hidden>
+      <p class="space-eyebrow">DEVICE COMPATIBILITY</p>
 
+      <h1>Space View is not available on this device.</h1>
+
+      <p>
+        This experience requires Google Chrome on an AR-capable Android device.
+        You can still explore HeritageLens using the marker-based Exhibit Mode.
+      </p>
+
+      <a class="space-primary-button" href="marker.html">
+        Open Exhibit Mode
+        <span aria-hidden="true">→</span>
+      </a>
+
+      <a class="space-secondary-link" href="index.html">
+        Return to home
+      </a>
+    </section>
+
+    <!-- AR guidance -->
+    <p id="arMessage" class="space-status" hidden aria-live="polite">
+      Preparing Heritage Lion…
+    </p>
+
+    <!-- Interaction controls -->
+    <section
+      id="arControls"
+      class="space-controls"
+      hidden
+      aria-label="Heritage Lion controls"
+    >
+      <button
+        id="placeButton"
+        class="space-control space-control-primary"
+        type="button"
+        disabled
+      >
+        Place Lion
+      </button>
+
+      <button id="rotateButton" class="space-control" type="button" disabled>
+        Rotate
+      </button>
+
+      <button id="scaleUpButton" class="space-control" type="button" disabled>
+        Scale +
+      </button>
+
+      <button
+        id="scaleDownButton"
+        class="space-control"
+        type="button"
+        disabled
+      >
+        Scale −
+      </button>
+
+      <button
+        id="resetButton"
+        class="space-control space-control-danger"
+        type="button"
+        disabled
+      >
+        Reset
+      </button>
+    </section>
+
+    <!-- Model information panel -->
+    <section
+      id="artefactPanel"
+      class="space-artefact-panel"
+      hidden
+      aria-labelledby="lionInfoTitle"
+    >
+      <button
+        id="closeArtefactPanel"
+        class="space-close-button"
+        type="button"
+        aria-label="Close Heritage Lion information"
+      >
+        Close
+      </button>
+
+      <p class="space-eyebrow">DIGITAL COLLECTION</p>
+
+      <h2 id="lionInfoTitle">Heritage Lion</h2>
+
+      <p class="space-info-subtitle">
+        Cultural Guardian • Interactive AR Interpretation
+      </p>
+
+      <p>
+        The lion is a familiar symbol in Sri Lankan cultural and artistic
+        traditions, representing strength, guardianship, and heritage. Space
+        View allows visitors to place this digital artefact in their own
+        environment and inspect its shape, scale, and details.
+      </p>
+
+      <p class="space-interpretive-note">
+        This is a digital interpretive model intended for cultural learning.
+        It is not presented as an exact replica of a specific historical
+        sculpture.
+      </p>
+    </section>
+
+    <!-- Opens the model information panel after placement -->
     <button
       id="infoButton"
-      class="ar-control-button ar-control-primary"
+      class="space-info-button"
       type="button"
+      hidden
+      aria-label="Open Heritage Lion information"
     >
-      <span class="control-icon" aria-hidden="true">i</span>
-      Discover More
+      i
     </button>
-  </nav>
-
-  <a-scene
-    embedded
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-    renderer="antialias: true; alpha: true; precision: mediump; colorManagement: true"
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; maxDetectionRate: 30;"
-  >
-    <a-assets timeout="30000">
-      <a-asset-item
-        id="elephantModel"
-        src="asset/models/Elephant.glb"
-      ></a-asset-item>
-    </a-assets>
-
-    <a-marker
-        id="hiroMarker"
-        preset="hiro"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        >
-    <!-- Digital interpretive elephant model -->
-    <a-entity
-        id="heritageObject"
-        gltf-model="#elephantModel"
-        position="0 0.02 0"
-        rotation="-90 180 0"
-        scale="0.35 0.35 0.35"
-    ></a-entity>
-
-    <!-- Soft ground shadow / exhibit base -->
-    <a-circle
-        position="0 0.004 0"
-        rotation="-90 0 0"
-        radius="0.62"
-        material="color: #101820; transparent: true; opacity: 0.26"
-    ></a-circle>
-
-    <!-- ==============================================
-        AR MUSEUM LABEL
-        This label is positioned above the elephant
-        and remains anchored to the Hiro marker.
-        ============================================== -->
-    <a-entity
-        id="elephantLabel"
-        position="0 1.12 0"
-        rotation="-90 0 0"
-    >
-        <!-- Dark transparent label background -->
-        <a-plane
-        width="1.62"
-        height="0.36"
-        position="0 0 0"
-        material="color: #07172C; transparent: true; opacity: 0.86"
-        ></a-plane>
-
-        <!-- Gold accent bar -->
-        <a-plane
-        width="1.62"
-        height="0.025"
-        position="0 0.158 0.006"
-        material="color: #D59F26; transparent: true; opacity: 1"
-        ></a-plane>
-
-        <!-- Main object name -->
-        <a-text
-        value="Nadungamuwa Vijaya Raja"
-        position="0 0.06 0.012"
-        align="center"
-        anchor="center"
-        baseline="center"
-        width="1.45"
-        color="#FFF4C9"
-        font="roboto"
-        shader="msdf"
-        ></a-text>
-
-        <!-- Subtitle -->
-        <a-text
-        value="CEREMONIAL TUSKER  |  HERITAGELENS COLLECTION"
-        position="0 -0.085 0.012"
-        align="center"
-        anchor="center"
-        baseline="center"
-        width="1.28"
-        color="#D7E4F4"
-        font="roboto"
-        shader="msdf"
-        letter-spacing="0.055"
-        ></a-text>
-    </a-entity>
-
-    <!-- Local illumination for the GLB model -->
-    <a-light
-        type="ambient"
-        color="#FFFFFF"
-        intensity="1.25"
-    ></a-light>
-
-    <a-light
-        type="directional"
-        color="#FFE6B0"
-        intensity="1.05"
-        position="1 2 1"
-    ></a-light>
-
-    <a-light
-        type="point"
-        color="#FFF3D3"
-        intensity="0.35"
-        distance="2"
-        position="-0.5 0.9 0.7"
-    ></a-light>
-    </a-marker>
-    <a-entity
-      light="type: ambient; color: #FFFFFF; intensity: 0.75"
-    ></a-entity>
-
-    <a-entity camera></a-entity>
-  </a-scene>
-
-  <style>
-    .ar-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .ar-brand-mark {
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.42);
-      border-radius: 9px;
-      background: rgba(213, 159, 38, 0.92);
-      color: #0a1f44;
-      font-size: 0.7rem;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-    }
-
-    .ar-mode-label {
-      margin: 2px 0 0;
-      color: rgba(255, 255, 255, 0.72);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .scan-guide {
-      position: fixed;
-      z-index: 20;
-      top: 78px;
-      left: 50%;
-      display: flex;
-      width: min(calc(100% - 32px), 420px);
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 14px;
-      background: rgba(0, 0, 0, 0.58);
-      color: #ffffff;
-      transform: translateX(-50%);
-      backdrop-filter: blur(8px);
-    }
-
-    .scan-guide-icon {
-      display: grid;
-      width: 40px;
-      height: 40px;
-      flex: 0 0 40px;
-      place-items: center;
-      border-radius: 10px;
-      background: rgba(213, 159, 38, 0.9);
-      color: #0a1f44;
-      font-size: 1.25rem;
-      font-weight: 900;
-    }
-
-    .scan-guide-title {
-      margin: 0 0 3px;
-      font-size: 0.9rem;
-      font-weight: 800;
-    }
-
-    .scan-guide-text {
-      margin: 0;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.78rem;
-      line-height: 1.45;
-    }
-
-    .info-kicker {
-      margin: 0 0 5px;
-      color: #1456a0;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .info-subtitle {
-      margin: 0 0 13px;
-      color: #5d6875;
-      font-size: 0.78rem;
-      font-weight: 750;
-      letter-spacing: 0.02em;
-    }
-
-    .interpretive-note {
-      margin-top: 13px !important;
-      padding: 10px 12px;
-      border-left: 3px solid #d59f26;
-      border-radius: 0 8px 8px 0;
-      background: #fff8e9;
-      color: #68542c !important;
-      font-size: 0.79rem !important;
-      line-height: 1.55 !important;
-    }
-
-    .artefact-meta {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .artefact-meta-item {
-      padding: 10px;
-      border-radius: 9px;
-      background: #f1f6fc;
-    }
-
-    .meta-label,
-    .meta-value {
-      display: block;
-    }
-
-    .meta-label {
-      margin-bottom: 4px;
-      color: #5d6875;
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .meta-value {
-      color: #0a1f44;
-      font-size: 0.78rem;
-      font-weight: 800;
-      line-height: 1.35;
-    }
-
-    .ar-control-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-    }
-
-    .ar-control-primary {
-      background: rgba(213, 159, 38, 0.96);
-      color: #0a1f44;
-    }
-
-    .control-icon {
-      display: inline-grid;
-      width: 20px;
-      height: 20px;
-      place-items: center;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      font-size: 0.86rem;
-      font-weight: 900;
-    }
-
-    .ar-control-primary .control-icon {
-      background: rgba(10, 31, 68, 0.14);
-    }
-
-    @media (max-width: 640px) {
-      .scan-guide {
-        top: 72px;
-      }
-
-      .artefact-meta {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+  </main>
 </body>
 </html>
