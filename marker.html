@@ -8,136 +8,115 @@
   />
   <meta
     name="description"
-    content="HeritageLens Exhibit Mode presents a digital interpretive model inspired by Nadungamuwa Vijaya Raja through marker-based augmented reality."
+    content="HeritageLens Exhibit Mode presents Nadungamuwa Vijaya Raja through marker-based augmented reality."
   />
-  <meta name="theme-color" content="#0a1f44" />
+  <meta name="theme-color" content="#09182d" />
 
   <title>Nadungamuwa Vijaya Raja | HeritageLens</title>
 
   <link rel="stylesheet" href="style.css" />
 
-  <!-- A-Frame framework -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- AR.js marker tracking -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
-
-  <!-- Elephant exhibit interactions -->
   <script src="js/marker.js" defer></script>
 </head>
 
 <body class="ar-page">
-  <!-- Top navigation overlay -->
-  <div class="ar-overlay">
-    <header class="ar-top-bar">
-      <div class="ar-brand">
-        <span class="ar-brand-mark" aria-hidden="true">HL</span>
+  <header class="exhibit-topbar">
+    <div class="exhibit-brand">
+      <span class="exhibit-brand-mark" aria-hidden="true">HL</span>
 
-        <div>
-          <p class="ar-title">HeritageLens</p>
-          <p class="ar-mode-label">Exhibit Mode</p>
-        </div>
+      <div>
+        <strong>HeritageLens</strong>
+        <small>Exhibit Mode</small>
       </div>
+    </div>
 
-      <a
-        class="back-button"
-        href="index.html"
-        aria-label="Return to HeritageLens home"
-      >
-        ← Home
-      </a>
-    </header>
-  </div>
+    <a class="exhibit-exit-button" href="index.html">← Home</a>
+  </header>
 
-  <!-- Live status text -->
-  <p id="arStatus" class="ar-status" role="status" aria-live="polite">
-    Point your camera at a HeritageLens Exhibit Marker.
-  </p>
-
-  <!-- Scan guidance -->
-  <section id="scanGuide" class="scan-guide">
-    <span class="scan-guide-icon" aria-hidden="true">▣</span>
+  <section id="scanGuide" class="exhibit-scan-guide">
+    <span class="scan-guide-symbol" aria-hidden="true">▣</span>
 
     <div>
-      <p class="scan-guide-title">Ready to explore?</p>
-      <p class="scan-guide-text">
-        Centre the HeritageLens Exhibit Marker in your camera view.
-      </p>
+      <strong>Ready to explore?</strong>
+      <p>Centre the Exhibit Marker in your camera view.</p>
     </div>
   </section>
 
-  <!-- Information panel -->
+  <p id="arStatus" class="exhibit-status" role="status" aria-live="polite">
+    Point your camera at a HeritageLens Exhibit Marker.
+  </p>
+
   <section
     id="infoPanel"
-    class="info-panel"
+    class="exhibit-info-panel"
     hidden
     aria-labelledby="artefactInfoTitle"
   >
     <button
       id="closeInfoButton"
-      class="close-info-button"
+      class="exhibit-close-button"
       type="button"
       aria-label="Close exhibit information"
     >
       Close
     </button>
 
-    <p class="info-kicker">Digital Collection</p>
+    <p class="exhibit-panel-kicker">DIGITAL COLLECTION</p>
 
     <h2 id="artefactInfoTitle">Nadungamuwa Vijaya Raja</h2>
 
-    <p class="info-subtitle">
+    <p class="exhibit-panel-subtitle">
       Ceremonial Tusker • Digital Interpretive Model
     </p>
 
     <p>
-      Nadungamuwa Vijaya Raja was a renowned ceremonial tusker associated with
-      Sri Lanka’s Kandy Esala Perahera. This interactive model is inspired by
-      his cultural significance and allows visitors to explore the form and
-      scale of a ceremonial elephant through augmented reality.
+      Nadungamuwa Vijaya Raja was a celebrated ceremonial tusker associated
+      with Sri Lanka’s Kandy Esala Perahera. This interactive model supports
+      cultural learning by allowing visitors to observe the elephant from
+      different viewpoints through augmented reality.
     </p>
 
-    <p class="interpretive-note">
-      This is a digital interpretive model for cultural learning and is not
-      presented as an exact scanned replica of Nadungamuwa Vijaya Raja.
+    <p class="exhibit-note">
+      This is a digital interpretive model inspired by the elephant’s cultural
+      significance. It is not presented as an exact scanned replica.
     </p>
 
-    <div class="artefact-meta">
-      <div class="artefact-meta-item">
-        <span class="meta-label">Cultural context</span>
-        <span class="meta-value">Kandy Esala Perahera</span>
+    <div class="exhibit-meta-grid">
+      <div>
+        <span>Cultural context</span>
+        <strong>Kandy Esala Perahera</strong>
       </div>
 
-      <div class="artefact-meta-item">
-        <span class="meta-label">Exhibit type</span>
-        <span class="meta-value">Interactive AR interpretation</span>
+      <div>
+        <span>Experience</span>
+        <strong>Marker-Based AR</strong>
       </div>
     </div>
   </section>
 
-  <!-- Visitor interaction controls -->
-  <nav class="ar-controls" aria-label="Elephant exhibit controls">
-    <button id="rotateButton" class="ar-control-button" type="button">
-      <span class="control-icon" aria-hidden="true">↻</span>
-      View Another Angle
+  <nav class="exhibit-controls" aria-label="Elephant exhibit controls">
+    <button id="rotateButton" class="exhibit-control-button" type="button">
+      <span aria-hidden="true">↻</span>
+      <span>View angle</span>
     </button>
 
-    <button id="guidedViewButton" class="ar-control-button" type="button">
-      <span class="control-icon" aria-hidden="true">◌</span>
-      Guided View
+    <button id="guidedViewButton" class="exhibit-control-button" type="button">
+      <span aria-hidden="true">◌</span>
+      <span>Guided view</span>
     </button>
 
     <button
       id="infoButton"
-      class="ar-control-button ar-control-primary"
+      class="exhibit-control-button exhibit-control-highlight"
       type="button"
     >
-      <span class="control-icon" aria-hidden="true">i</span>
-      Discover More
+      <span aria-hidden="true">i</span>
+      <span>Discover</span>
     </button>
   </nav>
 
-  <!-- A-Frame + AR.js marker scene -->
   <a-scene
     embedded
     vr-mode-ui="enabled: false"
@@ -145,7 +124,6 @@
     renderer="antialias: true; alpha: true; precision: mediump; colorManagement: true"
     arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; maxDetectionRate: 30;"
   >
-    <!-- GLB asset declaration -->
     <a-assets timeout="30000">
       <a-asset-item
         id="elephantModel"
@@ -153,7 +131,6 @@
       ></a-asset-item>
     </a-assets>
 
-    <!-- Hiro marker -->
     <a-marker
       id="hiroMarker"
       preset="hiro"
@@ -163,98 +140,78 @@
       smoothThreshold="5"
       emitevents="true"
     >
-      <!-- Elephant model: still by default -->
       <a-entity
         id="heritageObject"
         gltf-model="#elephantModel"
         position="0 0.02 0"
-        rotation="-90 180 0"
+        rotation="-90 180 180"
         scale="0.35 0.35 0.35"
       ></a-entity>
 
-      <!-- Soft visual base -->
       <a-circle
         position="0 0.004 0"
         rotation="-90 0 0"
-        radius="0.62"
-        material="color: #101820; transparent: true; opacity: 0.26"
+        radius="0.64"
+        material="color: #0B1623; transparent: true; opacity: 0.22"
       ></a-circle>
 
-      <!-- Museum-style AR name plaque -->
+      <!-- In AR.js marker space, this orientation is intended to face the camera -->
       <a-entity
         id="elephantLabel"
-        position="0 1.12 0"
-        rotation="-90 0 0"
+        position="0 1.20 0"
+        rotation="-90 180 180"
       >
         <a-plane
-          width="1.62"
-          height="0.36"
+          width="1.72"
+          height="0.42"
           position="0 0 0"
-          material="color: #07172C; transparent: true; opacity: 0.86"
+          material="color: #07172C; transparent: true; opacity: 0.92"
         ></a-plane>
 
         <a-plane
-          width="1.62"
-          height="0.025"
-          position="0 0.158 0.006"
-          material="color: #D59F26; transparent: true; opacity: 1"
+          width="1.72"
+          height="0.028"
+          position="0 0.18 0.008"
+          material="color: #E0AD3B"
         ></a-plane>
 
         <a-text
           value="Nadungamuwa Vijaya Raja"
-          position="0 0.06 0.012"
+          position="0 0.065 0.012"
           align="center"
           anchor="center"
           baseline="center"
-          width="1.45"
-          color="#FFF4C9"
+          width="1.48"
+          color="#FFF3C5"
           font="roboto"
           shader="msdf"
         ></a-text>
 
         <a-text
-          value="CEREMONIAL TUSKER | HERITAGELENS COLLECTION"
-          position="0 -0.085 0.012"
+          value="CEREMONIAL TUSKER  •  HERITAGELENS"
+          position="0 -0.095 0.012"
           align="center"
           anchor="center"
           baseline="center"
-          width="1.28"
-          color="#D7E4F4"
+          width="1.30"
+          color="#D5E3F2"
           font="roboto"
           shader="msdf"
-          letter-spacing="0.055"
         ></a-text>
       </a-entity>
 
-      <!-- Local lighting -->
-      <a-light
-        type="ambient"
-        color="#FFFFFF"
-        intensity="1.25"
-      ></a-light>
+      <a-light type="ambient" color="#FFFFFF" intensity="1.2"></a-light>
 
       <a-light
         type="directional"
-        color="#FFE6B0"
-        intensity="1.05"
+        color="#FFE8B7"
+        intensity="1.0"
         position="1 2 1"
-      ></a-light>
-
-      <a-light
-        type="point"
-        color="#FFF3D3"
-        intensity="0.35"
-        distance="2"
-        position="-0.5 0.9 0.7"
       ></a-light>
     </a-marker>
 
-    <!-- Scene light -->
-    <a-entity
-      light="type: ambient; color: #FFFFFF; intensity: 0.75"
-    ></a-entity>
+    <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.72"></a-entity>
 
-    <!-- Camera -->
     <a-entity camera></a-entity>
   </a-scene>
 </body>

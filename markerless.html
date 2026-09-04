@@ -8,26 +8,30 @@
   />
   <meta
     name="description"
-    content="HeritageLens Space View lets visitors place and explore a digital heritage lion through markerless WebXR augmented reality."
+    content="HeritageLens Space View lets visitors place a digital heritage lion with markerless WebXR AR."
   />
-  <meta name="theme-color" content="#0c203d" />
+  <meta name="theme-color" content="#09182d" />
 
   <title>Heritage Lion | Space View | HeritageLens</title>
 
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Three.js WebXR logic -->
+  <!-- Correct Three.js module mapping for GLTFLoader -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+      }
+    }
+  </script>
+
   <script type="module" src="js/markerless.js"></script>
 </head>
 
 <body class="space-view-page">
-  <!-- Top navigation -->
   <header class="space-topbar">
-    <a
-      class="space-brand"
-      href="index.html"
-      aria-label="Return to HeritageLens home"
-    >
+    <a class="space-brand" href="index.html" aria-label="Return to HeritageLens home">
       <span class="space-brand-mark" aria-hidden="true">HL</span>
 
       <span>
@@ -40,15 +44,14 @@
   </header>
 
   <main class="space-main">
-    <!-- Start panel -->
     <section id="startPanel" class="space-panel">
       <p class="space-eyebrow">MARKERLESS AUGMENTED REALITY</p>
 
       <h1>Place a heritage lion in your space.</h1>
 
       <p id="supportMessage">
-        Use your camera to find a flat surface, then place the digital lion
-        and inspect it from different angles.
+        Use your camera to find a flat surface, then place the Lion and inspect
+        it from different viewpoints.
       </p>
 
       <div class="space-requirements">
@@ -67,14 +70,13 @@
       </a>
     </section>
 
-    <!-- Unsupported device panel -->
     <section id="unsupportedPanel" class="space-panel" hidden>
       <p class="space-eyebrow">DEVICE COMPATIBILITY</p>
 
       <h1>Space View is not available on this device.</h1>
 
       <p>
-        This experience requires Google Chrome on an AR-capable Android device.
+        Space View requires Google Chrome on an AR-capable Android device.
         You can still explore HeritageLens using the marker-based Exhibit Mode.
       </p>
 
@@ -88,18 +90,11 @@
       </a>
     </section>
 
-    <!-- AR status -->
     <p id="arMessage" class="space-status" hidden aria-live="polite">
       Preparing Heritage Lion…
     </p>
 
-    <!-- AR controls -->
-    <section
-      id="arControls"
-      class="space-controls"
-      hidden
-      aria-label="Heritage Lion controls"
-    >
+    <section id="arControls" class="space-controls" hidden aria-label="Heritage Lion controls">
       <button
         id="placeButton"
         class="space-control space-control-primary"
@@ -117,12 +112,7 @@
         Scale +
       </button>
 
-      <button
-        id="scaleDownButton"
-        class="space-control"
-        type="button"
-        disabled
-      >
+      <button id="scaleDownButton" class="space-control" type="button" disabled>
         Scale −
       </button>
 
@@ -136,45 +126,40 @@
       </button>
     </section>
 
-    <!-- Lion information -->
     <section
       id="artefactPanel"
       class="space-artefact-panel"
       hidden
-      aria-labelledby="lionInfoTitle"
+      aria-labelledby="lionTitle"
     >
       <button
         id="closeArtefactPanel"
         class="space-close-button"
         type="button"
-        aria-label="Close Heritage Lion information"
       >
         Close
       </button>
 
       <p class="space-eyebrow">DIGITAL COLLECTION</p>
 
-      <h2 id="lionInfoTitle">Heritage Lion</h2>
+      <h2 id="lionTitle">Heritage Lion</h2>
 
       <p class="space-info-subtitle">
         Cultural Guardian • Interactive AR Interpretation
       </p>
 
       <p>
-        The lion is a familiar symbol in Sri Lankan cultural and artistic
-        traditions, representing strength, guardianship, and heritage. Space
-        View allows visitors to place this digital artefact in their own
-        environment and inspect its shape, scale, and details.
+        The lion is a prominent cultural symbol associated with strength and
+        guardianship. Place this digital artefact in your surroundings to
+        inspect its form, scale, and details.
       </p>
 
       <p class="space-interpretive-note">
-        This is a digital interpretive model intended for cultural learning.
-        It is not presented as an exact replica of a specific historical
-        sculpture.
+        This is a digital interpretive model for cultural learning and is not
+        presented as an exact replica of a particular historical sculpture.
       </p>
     </section>
 
-    <!-- Info button -->
     <button
       id="infoButton"
       class="space-info-button"

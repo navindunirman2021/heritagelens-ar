@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const marker = document.getElementById("hiroMarker");
-  const heritageObject = document.getElementById("heritageObject");
+  const elephant = document.getElementById("heritageObject");
   const status = document.getElementById("arStatus");
   const scanGuide = document.getElementById("scanGuide");
 
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (
     !marker ||
-    !heritageObject ||
+    !elephant ||
     !status ||
     !rotateButton ||
     !guidedViewButton ||
@@ -20,13 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
     !closeInfoButton ||
     !infoPanel
   ) {
-    console.error(
-      "HeritageLens Exhibit Mode could not initialise because required page elements are missing."
-    );
+    console.error("Exhibit Mode could not initialise. Required elements are missing.");
     return;
   }
 
-  let isMarkerVisible = false;
+  let markerVisible = false;
   let guidedViewActive = false;
   let currentYRotation = 180;
 
@@ -34,20 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
     status.textContent = message;
   }
 
-  function showScanGuide() {
+  function setGuideVisible(visible) {
     if (scanGuide) {
-      scanGuide.style.display = "flex";
+      scanGuide.hidden = !visible;
     }
   }
 
-  function hideScanGuide() {
-    if (scanGuide) {
-      scanGuide.style.display = "none";
-    }
-  }
-
-  function getCurrentRotation() {
-    const rotation = heritageObject.getAttribute("rotation");
+  function getRotation() {
+    const rotation = elephant.getAttribute("rotation");
 
     return {
       x: Number(rotation.x) || -90,
@@ -56,43 +48,28 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function updateGuidedViewButton(active) {
-    if (active) {
-      guidedViewButton.innerHTML = `
-        <span class="control-icon" aria-hidden="true">Ⅱ</span>
-        Stop Guided View
-      `;
-      return;
-    }
-
-    guidedViewButton.innerHTML = `
-      <span class="control-icon" aria-hidden="true">◌</span>
-      Guided View
-    `;
+  function setGuidedButton(active) {
+    guidedViewButton.innerHTML = active
+      ? '<span aria-hidden="true">Ⅱ</span><span>Stop view</span>'
+      : '<span aria-hidden="true">◌</span><span>Guided view</span>';
   }
 
   function stopGuidedView() {
-    heritageObject.removeAttribute("animation");
+    elephant.removeAttribute("animation");
     guidedViewActive = false;
-    updateGuidedViewButton(false);
+    setGuidedButton(false);
   }
 
   marker.addEventListener("markerFound", () => {
-    isMarkerVisible = true;
-    hideScanGuide();
-
-    setStatus(
-      "Exhibit detected. Explore Nadungamuwa Vijaya Raja from different viewpoints."
-    );
+    markerVisible = true;
+    setGuideVisible(false);
+    setStatus("Exhibit detected. Explore Nadungamuwa Vijaya Raja.");
   });
 
   marker.addEventListener("markerLost", () => {
-    isMarkerVisible = false;
-    showScanGuide();
-
-    setStatus(
-      "Exhibit Marker not visible. Centre the marker in your camera view."
-    );
+    markerVisible = false;
+    setGuideVisible(true);
+    setStatus("Marker not visible. Centre the Exhibit Marker in your camera view.");
   });
 
   rotateButton.addEventListener("click", () => {
@@ -100,75 +77,68 @@ document.addEventListener("DOMContentLoaded", () => {
       stopGuidedView();
     }
 
-    const rotation = getCurrentRotation();
-
+    const rotation = getRotation();
     currentYRotation = (rotation.y + 30) % 360;
 
-    heritageObject.setAttribute("animation__manualrotation", {
+    elephant.setAttribute("animation__manual", {
       property: "rotation",
+      from: `${rotation.x} ${rotation.y} ${rotation.z}`,
       to: `${rotation.x} ${currentYRotation} ${rotation.z}`,
-      dur: 450,
+      dur: 380,
       easing: "easeOutQuad"
     });
 
-    heritageObject.setAttribute("rotation", {
+    elephant.setAttribute("rotation", {
       x: rotation.x,
       y: currentYRotation,
       z: rotation.z
     });
 
-    if (isMarkerVisible) {
-      setStatus("Viewing Nadungamuwa Vijaya Raja from another angle.");
-    } else {
-      setStatus(
-        "Your selected viewing angle is ready. Scan the Exhibit Marker to continue."
-      );
-    }
+    setStatus(
+      markerVisible
+        ? "Viewing the exhibit from another angle."
+        : "Angle selected. Scan the marker to continue."
+    );
   });
 
   guidedViewButton.addEventListener("click", () => {
     if (guidedViewActive) {
       stopGuidedView();
-
-      setStatus("Guided View stopped. Use View Another Angle to inspect the model.");
+      setStatus("Guided view stopped.");
       return;
     }
 
-    const rotation = getCurrentRotation();
-    const guidedEndRotation = rotation.y + 90;
+    const rotation = getRotation();
+    const endRotation = rotation.y + 80;
 
-    currentYRotation = guidedEndRotation % 360;
-
-    heritageObject.setAttribute("animation", {
+    elephant.setAttribute("animation", {
       property: "rotation",
       from: `${rotation.x} ${rotation.y} ${rotation.z}`,
-      to: `${rotation.x} ${guidedEndRotation} ${rotation.z}`,
-      dur: 6500,
+      to: `${rotation.x} ${endRotation} ${rotation.z}`,
+      dur: 6000,
       easing: "easeInOutSine",
       loop: true,
       dir: "alternate"
     });
 
     guidedViewActive = true;
-    updateGuidedViewButton(true);
+    setGuidedButton(true);
 
-    setStatus(
-      "Guided View is active. The model is moving slowly through a 90-degree presentation angle."
-    );
+    setStatus("Guided view active. The exhibit is moving slowly through a viewing range.");
   });
 
   infoButton.addEventListener("click", () => {
     infoPanel.hidden = false;
-    setStatus("Nadungamuwa Vijaya Raja exhibit details opened.");
+    setStatus("Exhibit details opened.");
   });
 
   closeInfoButton.addEventListener("click", () => {
     infoPanel.hidden = true;
 
-    if (isMarkerVisible) {
-      setStatus("Continue exploring Nadungamuwa Vijaya Raja.");
-    } else {
-      setStatus("Point your camera at the HeritageLens Exhibit Marker.");
-    }
+    setStatus(
+      markerVisible
+        ? "Continue exploring Nadungamuwa Vijaya Raja."
+        : "Point your camera at the HeritageLens Exhibit Marker."
+    );
   });
 });
