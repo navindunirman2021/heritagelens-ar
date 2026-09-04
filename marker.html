@@ -143,52 +143,107 @@
     </a-assets>
 
     <a-marker
-      id="hiroMarker"
-      preset="hiro"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance="0.01"
-      smoothThreshold="5"
-      emitevents="true"
-    >
-      <!-- The elephant is intentionally still by default -->
-      <a-entity
+        id="hiroMarker"
+        preset="hiro"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
+        emitevents="true"
+        >
+    <!-- Digital interpretive elephant model -->
+    <a-entity
         id="heritageObject"
         gltf-model="#elephantModel"
         position="0 0.02 0"
         rotation="-90 180 0"
         scale="0.35 0.35 0.35"
-      ></a-entity>
+    ></a-entity>
 
-      <a-circle
+    <!-- Soft ground shadow / exhibit base -->
+    <a-circle
         position="0 0.004 0"
         rotation="-90 0 0"
         radius="0.62"
         material="color: #101820; transparent: true; opacity: 0.26"
-      ></a-circle>
+    ></a-circle>
 
-      <a-light
+    <!-- ==============================================
+        AR MUSEUM LABEL
+        This label is positioned above the elephant
+        and remains anchored to the Hiro marker.
+        ============================================== -->
+    <a-entity
+        id="elephantLabel"
+        position="0 1.12 0"
+        rotation="-90 0 0"
+    >
+        <!-- Dark transparent label background -->
+        <a-plane
+        width="1.62"
+        height="0.36"
+        position="0 0 0"
+        material="color: #07172C; transparent: true; opacity: 0.86"
+        ></a-plane>
+
+        <!-- Gold accent bar -->
+        <a-plane
+        width="1.62"
+        height="0.025"
+        position="0 0.158 0.006"
+        material="color: #D59F26; transparent: true; opacity: 1"
+        ></a-plane>
+
+        <!-- Main object name -->
+        <a-text
+        value="Nadungamuwa Vijaya Raja"
+        position="0 0.06 0.012"
+        align="center"
+        anchor="center"
+        baseline="center"
+        width="1.45"
+        color="#FFF4C9"
+        font="roboto"
+        shader="msdf"
+        ></a-text>
+
+        <!-- Subtitle -->
+        <a-text
+        value="CEREMONIAL TUSKER  |  HERITAGELENS COLLECTION"
+        position="0 -0.085 0.012"
+        align="center"
+        anchor="center"
+        baseline="center"
+        width="1.28"
+        color="#D7E4F4"
+        font="roboto"
+        shader="msdf"
+        letter-spacing="0.055"
+        ></a-text>
+    </a-entity>
+
+    <!-- Local illumination for the GLB model -->
+    <a-light
         type="ambient"
         color="#FFFFFF"
         intensity="1.25"
-      ></a-light>
+    ></a-light>
 
-      <a-light
+    <a-light
         type="directional"
         color="#FFE6B0"
         intensity="1.05"
         position="1 2 1"
-      ></a-light>
+    ></a-light>
 
-      <a-light
+    <a-light
         type="point"
         color="#FFF3D3"
         intensity="0.35"
         distance="2"
         position="-0.5 0.9 0.7"
-      ></a-light>
+    ></a-light>
     </a-marker>
-
     <a-entity
       light="type: ambient; color: #FFFFFF; intensity: 0.75"
     ></a-entity>
