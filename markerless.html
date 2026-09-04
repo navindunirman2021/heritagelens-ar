@@ -2,32 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Markerless AR | HeritageLens AR</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <meta
+    name="description"
+    content="HeritageLens Space View - place and explore a digital heritage artefact in augmented reality."
+  />
+  <meta name="theme-color" content="#0c203d" />
+
+  <title>Space View | HeritageLens</title>
 
   <link rel="stylesheet" href="style.css" />
+
+  <!-- The module script loads Three.js and starts Space View -->
+  <script type="module" src="js/markerless.js"></script>
 </head>
 
-<body class="home-page">
-  <main class="home-container">
-    <section class="coming-soon-card">
-      <p class="eyebrow">HeritageLens AR</p>
+<body class="space-view-page">
+  <header class="space-topbar">
+    <a class="space-brand" href="index.html" aria-label="Return to HeritageLens home">
+      <span class="space-brand-mark" aria-hidden="true">HL</span>
 
-      <h1>Markerless AR</h1>
+      <span>
+        <strong>HeritageLens</strong>
+        <small>Space View</small>
+      </span>
+    </a>
 
-      <p>
-        The markerless WebXR surface-detection and object-placement experience
-        will be implemented in the next development phase.
+    <a class="space-home-link" href="index.html">Exit</a>
+  </header>
+
+  <main class="space-main">
+    <!-- Startup / compatibility panel -->
+    <section id="startPanel" class="space-panel">
+      <p class="space-eyebrow">MARKERLESS AUGMENTED REALITY</p>
+
+      <h1>Place heritage in your space.</h1>
+
+      <p id="supportMessage">
+        Move around a flat surface, place a digital artefact, then rotate,
+        resize, and explore it in context.
       </p>
 
-      <p>
-        This mode will allow the user to detect a real-world surface, place a
-        3D heritage object, rotate it, scale it, view information, and reset
-        the experience.
-      </p>
+      <div class="space-requirements">
+        <span>Chrome on Android</span>
+        <span>Camera access</span>
+        <span>Flat surface</span>
+      </div>
 
-      <a class="primary-button" href="index.html">Return to Home</a>
+      <button id="startARButton" class="space-primary-button" type="button">
+        Start Space View
+        <span aria-hidden="true">→</span>
+      </button>
+
+      <a class="space-secondary-link" href="marker.html">
+        Prefer a marker? Open Exhibit Mode
+      </a>
     </section>
+
+    <!-- Visible if WebXR immersive AR is unavailable -->
+    <section id="unsupportedPanel" class="space-panel" hidden>
+      <p class="space-eyebrow">DEVICE COMPATIBILITY</p>
+
+      <h1>Space View is not available on this device.</h1>
+
+      <p>
+        This experience requires a WebXR-compatible browser on an
+        AR-capable Android device. You can still explore HeritageLens through
+        Exhibit Mode.
+      </p>
+
+      <a class="space-primary-button" href="marker.html">
+        Open Exhibit Mode
+        <span aria-hidden="true">→</span>
+      </a>
+
+      <a class="space-secondary-link" href="index.html">
+        Return to home
+      </a>
+    </section>
+
+    <!-- Status shown while in AR -->
+    <p id="arMessage" class="space-status" hidden aria-live="polite">
+      Move your device slowly to find a flat surface.
+    </p>
+
+    <!-- Controls appear after a digital artefact is placed -->
+    <section id="arControls" class="space-controls" hidden aria-label="Artefact controls">
+      <button id="placeButton" class="space-control space-control-primary" type="button">
+        Place Artefact
+      </button>
+
+      <button id="rotateButton" class="space-control" type="button" disabled>
+        Rotate
+      </button>
+
+      <button id="scaleUpButton" class="space-control" type="button" disabled>
+        Scale +
+      </button>
+
+      <button id="scaleDownButton" class="space-control" type="button" disabled>
+        Scale −
+      </button>
+
+      <button id="resetButton" class="space-control space-control-danger" type="button" disabled>
+        Reset
+      </button>
+    </section>
+
+    <!-- Information panel for user experience -->
+    <section id="artefactPanel" class="space-artefact-panel" hidden>
+      <button id="closeArtefactPanel" class="space-close-button" type="button">
+        Close
+      </button>
+
+      <p class="space-eyebrow">DIGITAL COLLECTION</p>
+      <h2>Heritage Mask</h2>
+
+      <p>
+        This virtual artefact represents a ceremonial heritage mask designed
+        for interactive exploration. Space View allows visitors to place the
+        object at real-world scale and inspect its form from multiple angles.
+      </p>
+    </section>
+
+    <button id="infoButton" class="space-info-button" type="button" hidden>
+      i
+    </button>
   </main>
 </body>
 </html>
