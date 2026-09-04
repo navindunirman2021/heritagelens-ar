@@ -8,7 +8,7 @@
   />
   <meta
     name="description"
-    content="HeritageLens Exhibit Mode presents Nadungamuwa Vijaya Raja through marker-based augmented reality."
+    content="HeritageLens Exhibit Mode presents a digital interpretive elephant exhibit through marker-based augmented reality."
   />
   <meta name="theme-color" content="#09182d" />
 
@@ -23,29 +23,29 @@
 
 <body class="ar-page">
   <header class="exhibit-topbar">
-    <div class="exhibit-brand">
+    <a class="exhibit-brand" href="index.html" aria-label="HeritageLens home">
       <span class="exhibit-brand-mark" aria-hidden="true">HL</span>
 
-      <div>
+      <span>
         <strong>HeritageLens</strong>
         <small>Exhibit Mode</small>
-      </div>
-    </div>
+      </span>
+    </a>
 
-    <a class="exhibit-exit-button" href="index.html">← Home</a>
+    <a class="exhibit-exit-button" href="index.html">Exit</a>
   </header>
 
   <section id="scanGuide" class="exhibit-scan-guide">
     <span class="scan-guide-symbol" aria-hidden="true">▣</span>
 
     <div>
-      <strong>Ready to explore?</strong>
-      <p>Centre the Exhibit Marker in your camera view.</p>
+      <strong>Find the exhibit marker</strong>
+      <p>Centre the Hiro marker in your camera view.</p>
     </div>
   </section>
 
   <p id="arStatus" class="exhibit-status" role="status" aria-live="polite">
-    Point your camera at a HeritageLens Exhibit Marker.
+    Scan the Exhibit Marker to begin.
   </p>
 
   <section
@@ -72,15 +72,15 @@
     </p>
 
     <p>
-      Nadungamuwa Vijaya Raja was a celebrated ceremonial tusker associated
-      with Sri Lanka’s Kandy Esala Perahera. This interactive model supports
-      cultural learning by allowing visitors to observe the elephant from
-      different viewpoints through augmented reality.
+      Nadungamuwa Vijaya Raja was a renowned ceremonial tusker associated with
+      Sri Lanka’s Kandy Esala Perahera. This AR exhibit supports cultural
+      learning by allowing visitors to observe the elephant from different
+      viewpoints.
     </p>
 
     <p class="exhibit-note">
-      This is a digital interpretive model inspired by the elephant’s cultural
-      significance. It is not presented as an exact scanned replica.
+      This digital interpretive model is inspired by the elephant’s cultural
+      significance and is not an exact scanned replica.
     </p>
 
     <div class="exhibit-meta-grid">
@@ -90,7 +90,7 @@
       </div>
 
       <div>
-        <span>Experience</span>
+        <span>Interaction</span>
         <strong>Marker-Based AR</strong>
       </div>
     </div>
@@ -99,12 +99,12 @@
   <nav class="exhibit-controls" aria-label="Elephant exhibit controls">
     <button id="rotateButton" class="exhibit-control-button" type="button">
       <span aria-hidden="true">↻</span>
-      <span>View angle</span>
+      <span>Angle</span>
     </button>
 
     <button id="guidedViewButton" class="exhibit-control-button" type="button">
       <span aria-hidden="true">◌</span>
-      <span>Guided view</span>
+      <span>Guided</span>
     </button>
 
     <button
@@ -113,7 +113,7 @@
       type="button"
     >
       <span aria-hidden="true">i</span>
-      <span>Discover</span>
+      <span>Details</span>
     </button>
   </nav>
 
@@ -140,77 +140,87 @@
       smoothThreshold="5"
       emitevents="true"
     >
+      <!--
+        Smaller, elevated elephant.
+        This prevents it from filling the entire phone screen.
+      -->
       <a-entity
         id="heritageObject"
         gltf-model="#elephantModel"
-        position="0 0.02 0"
+        position="0 0.08 0"
         rotation="-90 180 180"
-        scale="0.35 0.35 0.35"
+        scale="0.18 0.18 0.18"
       ></a-entity>
 
+      <!-- Small visual base under the elephant -->
       <a-circle
-        position="0 0.004 0"
+        position="0 0.003 0"
         rotation="-90 0 0"
-        radius="0.64"
-        material="color: #0B1623; transparent: true; opacity: 0.22"
+        radius="0.36"
+        material="color: #07172C; transparent: true; opacity: 0.18"
       ></a-circle>
 
-      <!-- In AR.js marker space, this orientation is intended to face the camera -->
+      <!--
+        Compact AR label placed above elephant.
+        It does not cover the elephant body or legs.
+      -->
       <a-entity
         id="elephantLabel"
-        position="0 1.20 0"
+        position="0 0.80 0"
         rotation="-90 180 180"
       >
         <a-plane
-          width="1.72"
-          height="0.42"
+          width="1.08"
+          height="0.20"
           position="0 0 0"
-          material="color: #07172C; transparent: true; opacity: 0.92"
+          material="color: #07172C; transparent: true; opacity: 0.90; side: double"
         ></a-plane>
 
         <a-plane
-          width="1.72"
-          height="0.028"
-          position="0 0.18 0.008"
-          material="color: #E0AD3B"
+          width="1.08"
+          height="0.018"
+          position="0 0.082 0.012"
+          material="color: #E0AD3B; side: double"
         ></a-plane>
 
         <a-text
-          value="Nadungamuwa Vijaya Raja"
-          position="0 0.065 0.012"
+          value="NADUNGAMUWA VIJAYA RAJA"
+          position="0 0.018 0.020"
           align="center"
           anchor="center"
           baseline="center"
-          width="1.48"
+          width="0.94"
           color="#FFF3C5"
           font="roboto"
           shader="msdf"
+          side="double"
         ></a-text>
 
         <a-text
-          value="CEREMONIAL TUSKER  •  HERITAGELENS"
-          position="0 -0.095 0.012"
+          value="CEREMONIAL TUSKER"
+          position="0 -0.058 0.020"
           align="center"
           anchor="center"
           baseline="center"
-          width="1.30"
+          width="0.72"
           color="#D5E3F2"
           font="roboto"
           shader="msdf"
+          side="double"
         ></a-text>
       </a-entity>
 
-      <a-light type="ambient" color="#FFFFFF" intensity="1.2"></a-light>
+      <a-light type="ambient" color="#FFFFFF" intensity="1.1"></a-light>
 
       <a-light
         type="directional"
         color="#FFE8B7"
-        intensity="1.0"
+        intensity="0.8"
         position="1 2 1"
       ></a-light>
     </a-marker>
 
-    <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.72"></a-entity>
+    <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.65"></a-entity>
 
     <a-entity camera></a-entity>
   </a-scene>
