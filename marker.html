@@ -8,26 +8,21 @@
   />
   <meta
     name="description"
-    content="HeritageLens Exhibit Mode lets visitors explore a digital heritage elephant through marker-based augmented reality."
+    content="HeritageLens Exhibit Mode presents a digital interpretive model inspired by Nadungamuwa Vijaya Raja through marker-based augmented reality."
   />
   <meta name="theme-color" content="#0a1f44" />
 
-  <title>Exhibit Mode | HeritageLens</title>
+  <title>Nadungamuwa Vijaya Raja | HeritageLens</title>
 
   <link rel="stylesheet" href="style.css" />
 
-  <!-- A-Frame 3D framework -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- AR.js marker tracking for A-Frame -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
 
-  <!-- Exhibit interaction behaviour -->
   <script src="js/marker.js" defer></script>
 </head>
 
 <body class="ar-page">
-  <!-- Top overlay -->
   <div class="ar-overlay">
     <header class="ar-top-bar">
       <div class="ar-brand">
@@ -42,19 +37,17 @@
       <a
         class="back-button"
         href="index.html"
-        aria-label="Return to HeritageLens home page"
+        aria-label="Return to HeritageLens home"
       >
         ← Home
       </a>
     </header>
   </div>
 
-  <!-- Live tracking status -->
   <p id="arStatus" class="ar-status" role="status" aria-live="polite">
     Point your camera at a HeritageLens Exhibit Marker.
   </p>
 
-  <!-- Initial scan guide -->
   <section id="scanGuide" class="scan-guide">
     <span class="scan-guide-icon" aria-hidden="true">▣</span>
 
@@ -66,7 +59,6 @@
     </div>
   </section>
 
-  <!-- Artefact information panel -->
   <section
     id="infoPanel"
     class="info-panel"
@@ -84,39 +76,46 @@
 
     <p class="info-kicker">Digital Collection</p>
 
-    <h2 id="artefactInfoTitle">Heritage Elephant</h2>
+    <h2 id="artefactInfoTitle">Nadungamuwa Vijaya Raja</h2>
+
+    <p class="info-subtitle">
+      Ceremonial Tusker • Digital Interpretive Model
+    </p>
 
     <p>
-      The elephant is a widely recognized cultural symbol in Sri Lankan
-      heritage, appearing in ceremonial processions, architecture, art, and
-      religious traditions. This interactive digital exhibit allows visitors
-      to inspect the artefact from multiple viewpoints through marker-based
-      augmented reality.
+      Nadungamuwa Vijaya Raja was a renowned ceremonial tusker associated with
+      Sri Lanka’s Kandy Esala Perahera. This interactive model is inspired by
+      his cultural significance and allows visitors to explore the form and
+      scale of a ceremonial elephant through augmented reality.
+    </p>
+
+    <p class="interpretive-note">
+      This is a digital interpretive model for cultural learning and is not
+      presented as an exact scanned replica of Nadungamuwa Vijaya Raja.
     </p>
 
     <div class="artefact-meta">
       <div class="artefact-meta-item">
-        <span class="meta-label">Category</span>
-        <span class="meta-value">Cultural Symbol</span>
+        <span class="meta-label">Cultural context</span>
+        <span class="meta-value">Kandy Esala Perahera</span>
       </div>
 
       <div class="artefact-meta-item">
-        <span class="meta-label">Experience</span>
-        <span class="meta-value">Interactive 3D View</span>
+        <span class="meta-label">Exhibit type</span>
+        <span class="meta-value">Interactive AR interpretation</span>
       </div>
     </div>
   </section>
 
-  <!-- Visitor controls -->
   <nav class="ar-controls" aria-label="Artefact controls">
     <button id="rotateButton" class="ar-control-button" type="button">
       <span class="control-icon" aria-hidden="true">↻</span>
       View Another Angle
     </button>
 
-    <button id="pauseButton" class="ar-control-button" type="button">
-      <span class="control-icon" aria-hidden="true">Ⅱ</span>
-      Pause Motion
+    <button id="guidedViewButton" class="ar-control-button" type="button">
+      <span class="control-icon" aria-hidden="true">◌</span>
+      Guided View
     </button>
 
     <button
@@ -129,7 +128,6 @@
     </button>
   </nav>
 
-  <!-- Marker-based AR scene -->
   <a-scene
     embedded
     vr-mode-ui="enabled: false"
@@ -137,7 +135,6 @@
     renderer="antialias: true; alpha: true; precision: mediump; colorManagement: true"
     arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; maxDetectionRate: 30;"
   >
-    <!-- GLB asset loader -->
     <a-assets timeout="30000">
       <a-asset-item
         id="elephantModel"
@@ -145,7 +142,6 @@
       ></a-asset-item>
     </a-assets>
 
-    <!-- Built-in Hiro marker -->
     <a-marker
       id="hiroMarker"
       preset="hiro"
@@ -155,57 +151,51 @@
       smoothThreshold="5"
       emitevents="true"
     >
-      <!-- Real Elephant GLB model -->
+      <!-- The elephant is intentionally still by default -->
       <a-entity
         id="heritageObject"
         gltf-model="#elephantModel"
         position="0 0.02 0"
-        rotation="-90 0 0"
+        rotation="-90 180 0"
         scale="0.35 0.35 0.35"
-        animation="property: rotation; to: -90 360 0; dur: 12000; easing: linear; loop: true"
       ></a-entity>
 
-      <!-- Small object platform/shadow, visually separates model from marker -->
       <a-circle
-        position="0 0.005 0"
+        position="0 0.004 0"
         rotation="-90 0 0"
-        radius="0.58"
-        material="color: #0F1721; transparent: true; opacity: 0.30"
+        radius="0.62"
+        material="color: #101820; transparent: true; opacity: 0.26"
       ></a-circle>
 
-      <!-- Local lighting to make GLB visible in the camera scene -->
       <a-light
         type="ambient"
         color="#FFFFFF"
-        intensity="1.35"
+        intensity="1.25"
       ></a-light>
 
       <a-light
         type="directional"
-        color="#FFE4A3"
-        intensity="1.15"
+        color="#FFE6B0"
+        intensity="1.05"
         position="1 2 1"
       ></a-light>
 
       <a-light
         type="point"
-        color="#FFF4D6"
-        intensity="0.55"
+        color="#FFF3D3"
+        intensity="0.35"
         distance="2"
-        position="-0.5 1 0.7"
+        position="-0.5 0.9 0.7"
       ></a-light>
     </a-marker>
 
-    <!-- General scene lighting -->
     <a-entity
-      light="type: ambient; color: #FFFFFF; intensity: 0.8"
+      light="type: ambient; color: #FFFFFF; intensity: 0.75"
     ></a-entity>
 
-    <!-- AR camera -->
     <a-entity camera></a-entity>
   </a-scene>
 
-  <!-- Exhibit-page-only styles -->
   <style>
     .ar-brand {
       display: flex;
@@ -287,6 +277,25 @@
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    .info-subtitle {
+      margin: 0 0 13px;
+      color: #5d6875;
+      font-size: 0.78rem;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+    }
+
+    .interpretive-note {
+      margin-top: 13px !important;
+      padding: 10px 12px;
+      border-left: 3px solid #d59f26;
+      border-radius: 0 8px 8px 0;
+      background: #fff8e9;
+      color: #68542c !important;
+      font-size: 0.79rem !important;
+      line-height: 1.55 !important;
     }
 
     .artefact-meta {

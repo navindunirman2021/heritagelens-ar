@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scanGuide = document.getElementById("scanGuide");
 
   const rotateButton = document.getElementById("rotateButton");
-  const pauseButton = document.getElementById("pauseButton");
+  const guidedViewButton = document.getElementById("guidedViewButton");
   const infoButton = document.getElementById("infoButton");
   const closeInfoButton = document.getElementById("closeInfoButton");
   const infoPanel = document.getElementById("infoPanel");
@@ -15,22 +15,20 @@ document.addEventListener("DOMContentLoaded", () => {
     !heritageObject ||
     !status ||
     !rotateButton ||
-    !pauseButton ||
+    !guidedViewButton ||
     !infoButton ||
     !closeInfoButton ||
     !infoPanel
   ) {
     console.error(
-      "HeritageLens Exhibit Mode could not initialise because one or more required elements are missing."
+      "HeritageLens Exhibit Mode could not initialise because required page elements are missing."
     );
     return;
   }
 
-  let isAnimationPaused = false;
   let isMarkerVisible = false;
-
-  const rotationAnimation =
-    "property: rotation; to: -90 360 0; dur: 12000; easing: linear; loop: true";
+  let guidedViewActive = false;
+  let currentYRotation = 180;
 
   function setStatus(message) {
     status.textContent = message;
@@ -48,19 +46,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function updatePauseButton(isPaused) {
-    if (isPaused) {
-      pauseButton.innerHTML = `
-        <span class="control-icon" aria-hidden="true">▶</span>
-        Resume Motion
+  function getCurrentRotation() {
+    const rotation = heritageObject.getAttribute("rotation");
+
+    return {
+      x: Number(rotation.x) || -90,
+      y: Number(rotation.y) || currentYRotation,
+      z: Number(rotation.z) || 0
+    };
+  }
+
+  function updateGuidedViewButton(active) {
+    if (active) {
+      guidedViewButton.innerHTML = `
+        <span class="control-icon" aria-hidden="true">Ⅱ</span>
+        Stop Guided View
       `;
       return;
     }
 
-    pauseButton.innerHTML = `
-      <span class="control-icon" aria-hidden="true">Ⅱ</span>
-      Pause Motion
+    guidedViewButton.innerHTML = `
+      <span class="control-icon" aria-hidden="true">◌</span>
+      Guided View
     `;
+  }
+
+  function stopGuidedView() {
+    heritageObject.removeAttribute("animation");
+    guidedViewActive = false;
+    updateGuidedViewButton(false);
   }
 
   marker.addEventListener("markerFound", () => {
@@ -68,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     hideScanGuide();
 
     setStatus(
-      "Exhibit detected. Explore the Heritage Elephant from every angle."
+      "Exhibit detected. Explore Nadungamuwa Vijaya Raja from different viewpoints."
     );
   });
 
@@ -82,52 +96,77 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   rotateButton.addEventListener("click", () => {
-    const rotation = heritageObject.getAttribute("rotation");
+    if (guidedViewActive) {
+      stopGuidedView();
+    }
+
+    const rotation = getCurrentRotation();
+
+    currentYRotation = (rotation.y + 30) % 360;
+
+    heritageObject.setAttribute("animation__manualrotation", {
+      property: "rotation",
+      to: `${rotation.x} ${currentYRotation} ${rotation.z}`,
+      dur: 450,
+      easing: "easeOutQuad"
+    });
 
     heritageObject.setAttribute("rotation", {
       x: rotation.x,
-      y: (rotation.y + 45) % 360,
+      y: currentYRotation,
       z: rotation.z
     });
 
     if (isMarkerVisible) {
-      setStatus("Viewing the Heritage Elephant from another angle.");
+      setStatus("Viewing Nadungamuwa Vijaya Raja from another angle.");
     } else {
       setStatus(
-        "Your new viewing angle is ready. Scan the Exhibit Marker to continue."
+        "Your selected viewing angle is ready. Scan the Exhibit Marker to continue."
       );
     }
   });
 
-  pauseButton.addEventListener("click", () => {
-    if (isAnimationPaused) {
-      heritageObject.setAttribute("animation", rotationAnimation);
+  guidedViewButton.addEventListener("click", () => {
+    if (guidedViewActive) {
+      stopGuidedView();
 
-      isAnimationPaused = false;
-      updatePauseButton(false);
-
-      setStatus("Heritage Elephant motion resumed.");
+      setStatus("Guided View stopped. Use View Another Angle to inspect the model.");
       return;
     }
 
-    heritageObject.removeAttribute("animation");
+    const rotation = getCurrentRotation();
+    const guidedEndRotation = rotation.y + 90;
 
-    isAnimationPaused = true;
-    updatePauseButton(true);
+    currentYRotation = guidedEndRotation % 360;
 
-    setStatus("Heritage Elephant motion paused.");
+    heritageObject.setAttribute("animation", {
+      property: "rotation",
+      from: `${rotation.x} ${rotation.y} ${rotation.z}`,
+      to: `${rotation.x} ${guidedEndRotation} ${rotation.z}`,
+      dur: 6500,
+      easing: "easeInOutSine",
+      loop: true,
+      dir: "alternate"
+    });
+
+    guidedViewActive = true;
+    updateGuidedViewButton(true);
+
+    setStatus(
+      "Guided View is active. The model is moving slowly through a 90-degree presentation angle."
+    );
   });
 
   infoButton.addEventListener("click", () => {
     infoPanel.hidden = false;
-    setStatus("Heritage Elephant details opened.");
+    setStatus("Nadungamuwa Vijaya Raja exhibit details opened.");
   });
 
   closeInfoButton.addEventListener("click", () => {
     infoPanel.hidden = true;
 
     if (isMarkerVisible) {
-      setStatus("Continue exploring the Heritage Elephant.");
+      setStatus("Continue exploring Nadungamuwa Vijaya Raja.");
     } else {
       setStatus("Point your camera at the HeritageLens Exhibit Marker.");
     }
